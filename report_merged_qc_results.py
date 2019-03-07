@@ -82,11 +82,11 @@ def run(recent_merge_report, new_metrics_file, output_file):
     # aligned_bases (CN)
     # duplicate_bases (DC)
 
-    # pandas broadcasting operateion
+    # pandas broadcasting operation
     # val1_minus_val10 = df["Val1"] - df["Val10"]
     # df['Val_Diff'] = df['Val10'] - df['Val1']
 
-    # unique_aligned_bases = aligned_bases - duplicate_bases # Exemplar RT 13348
+    # unique_aligned_bases = aligned_bases - duplicate_bases
     # unique_aligned_gb = unique_aligned_bases / 1_000_000_000
     rtm_sub['unique_aligned_gb'] = (rtm_sub['aligned_bases'] - rtm_sub['duplicate_bases']) / 1_000_000_000
 
@@ -113,13 +113,18 @@ def run(recent_merge_report, new_metrics_file, output_file):
     m = pd.merge(rtm_sub, nm, how='outer', left_on='sample_id', right_on='sample_id')
 
 
-    # fill column 'collection' with a value
+    # TODO
+    # make a dictionary {'Abbrev': 'cohort name'}, add a column 'collection'
+    # eg {'TMHASC': 'Harvard SCD'}
 
+    # temporary fix: fill column 'collection' with a value
     m['collection'] = 'Harvard SCD'
 
-    # new: metrics from Kim Wlker's group
+    # columnds in weekly report tab3 'Production Metrics'
+    # TODO
+    # new: new metrics from R&D group (will be pushed to LIMS in the future)
 
-    # Week
+    # Week # TODO 'Will contain output for at least the last 4 weeks along with metrics'
     # External ID # extract from merge_name
     # Collection # cohort?
     # PF HQ Aligned Q20 Bases # new
@@ -197,7 +202,7 @@ def normalize_name(field_name):
         (r'/', '_per_'),
         (r'%', '_pct_'),
         (r'\W', '_'),
-        (r'^_+', ''),
+        (r'^_+', ''), # remove '_' if field_name begins with '_'
         (r'_+$', ''),
         (r'__+', '_'),
     )
