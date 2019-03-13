@@ -50,7 +50,17 @@ def run(recent_merge_report, new_metrics_file, output_file):
     # use loc to avoid warning message
     rtm_sub = rtm.loc[:,sub_cols]
 
-    # extract sample_id from merge_name to merge dataframes
+    # extract abbrev from merge_name
+    cid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[2]
+    # TODO add default value using defaultdict
+    collection_dict = {
+            'Legacy': 'TOPMed Control',
+            'TMHASC': 'Harvard SCD'
+    }
+    # add a column 'collection'
+    rtm_sub['collection'] = cid.map(collection_dict)
+
+    # extract sample_id from merge_name
     sid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[3]
 
     rtm_sub['sample_id'] = sid
@@ -73,7 +83,6 @@ def run(recent_merge_report, new_metrics_file, output_file):
     # TODO
     # results (PASS or FAIL)
 
-
     # new metrics (R&D group)
     nm = pd.read_excel(new_metrics_file, sheet_name='Sheet1')
     d2 = {c: normalize_name(c) for c in nm.columns}
@@ -83,17 +92,12 @@ def run(recent_merge_report, new_metrics_file, output_file):
     m = pd.merge(rtm_sub, nm, how='outer', left_on='sample_id', right_on='sample_id')
 
     # TODO
-    # make a dictionary {'Abbrev': 'cohort name'}, add a column 'collection'
-    # eg {'TMHASC': 'Harvard SCD'}
+    # new metrics from R&D group will be pushed to LIMS in the future
 
-    # temporary fix: fill column 'collection' with a value
-    m['collection'] = 'Harvard SCD'
+    # Week
+    # TODO 'Will contain output for at least the last 4 weeks along with metrics'
 
     # columnds in weekly report tab3 'Production Metrics'
-    # TODO
-    # new: new metrics from R&D group (will be pushed to LIMS in the future)
-
-    # Week # TODO 'Will contain output for at least the last 4 weeks along with metrics'
     # External ID # extract from merge_name
     # Collection # cohort?
     # PF HQ Aligned Q20 Bases # new
@@ -125,6 +129,7 @@ def run(recent_merge_report, new_metrics_file, output_file):
         'aligned_bases_pct',
         'chimeric_rate',
         'merge_name',
+        'merge_finished_date',
         'merge_cram_path'
         # results # TODO
     ]
