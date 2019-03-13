@@ -80,10 +80,22 @@ def run(recent_merge_report, new_metrics_file, output_file):
     # unique_aligned_gb = unique_aligned_bases / 1_000_000_000
     rtm_sub['unique_aligned_gb'] = (rtm_sub['aligned_bases'] - rtm_sub['duplicate_bases']) / 1_000_000_000
 
-    # TODO
-    # results (PASS or FAIL)
+    # add qc results 'PASS' or 'FAIL'
+    b1 = (rtm_sub['unique_aligned_gb'] > 90.0) | (rtm_sub['unique_aligned_gb'] == 90.0)
+    b2 = (rtm_sub['aligned_bases_pct'] > 90.0) | (rtm_sub['aligned_bases_pct'] == 90.0)
+    b3 = (rtm_sub['average_coverage'] > 30.0) | (rtm_sub['average_coverage'] == 30.0)
+    b4 = (rtm_sub['per_ten_coverage_bases'] > 95.0) | (rtm_sub['per_ten_coverage_bases'] == 95.0)
+    b5 = (rtm_sub['per_twenty_coverage_bases'] > 90.0) | (rtm_sub['per_twenty_coverage_bases'] == 90.0)
+    b6 = (rtm_sub['q20_bases'] > 87_000_000_000) | (rtm_sub['q20_bases'] == 87_000_000_000)
+    # TODO confirm contamination_pct cutoff value
+    b7 = (rtm_sub['contamination_pct'] < 3.0) | (rtm_sub['contamination_pct'] == 3.0)
+    b8 = (rtm_sub['chimeric_rate'] < 5.0)
+    rtm_sub['bool_val'] = b1 & b2 & b3 & b4 & b5 & b6 & b7 & b8
+    bool_dict = {True: 'PASS', False: 'FAIL'}
+    rtm_sub['results'] = rtm_sub['bool_val'].map(bool_dict)
 
-    # new metrics (R&D group)
+    # new metrics from R&D group
+    # will be pushed to LIMS in the future
     nm = pd.read_excel(new_metrics_file, sheet_name='Sheet1')
     d2 = {c: normalize_name(c) for c in nm.columns}
     nm.rename(columns=d2, inplace=True)
@@ -91,11 +103,8 @@ def run(recent_merge_report, new_metrics_file, output_file):
     # merge dataframes (merge_sub, nm)
     m = pd.merge(rtm_sub, nm, how='outer', left_on='sample_id', right_on='sample_id')
 
-    # TODO
-    # new metrics from R&D group will be pushed to LIMS in the future
-
-    # Week
-    # TODO 'Will contain output for at least the last 4 weeks along with metrics'
+    # TODO track weeks
+    # will contain output for at least the last 4 weeks along with metrics
 
     # columnds in weekly report tab3 'Production Metrics'
     # External ID # extract from merge_name
@@ -130,8 +139,8 @@ def run(recent_merge_report, new_metrics_file, output_file):
         'chimeric_rate',
         'merge_name',
         'merge_finished_date',
-        'merge_cram_path'
-        # results # TODO
+        'merge_cram_path',
+        'results'
     ]
 
     tmqc = m[tm_cols]
