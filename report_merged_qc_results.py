@@ -29,30 +29,13 @@ def parse_args():
 def run(recent_merge_report, new_metrics_file, output_file):
     rtm = pd.read_excel(recent_merge_report, sheet_name='table ref')
 
-
-    rtm_column_names = []
-
-    for col_name in rtm.columns:
-        rtm_column_names.append(col_name)
-
-
     # normalize column names
-
-    rtm_new_column_names = []
-
-    for col_name in rtm.columns:
-        col_name = normalize_name(col_name)
-        rtm_new_column_names.append(col_name)
-
-
     d1 = {c: normalize_name(c) for c in rtm.columns}
-
-
     rtm.rename(columns=d1, inplace=True)
 
-
-    tm_cols = [
+    sub_cols = [
         'merge_name',
+        'merge_finished_date',
         'aligned_bases', # qc only
         'duplicate_bases', # qc only
         'aligned_bases_pct', # qc only
@@ -64,20 +47,17 @@ def run(recent_merge_report, new_metrics_file, output_file):
         'contamination_rate'
     ]
 
+    # use loc to avoid warning message
+    rtm_sub = rtm.loc[:,sub_cols]
 
-    rtm_sub = rtm.loc[:,tm_cols]
-
-
+    # extract sample_id from merge_name to merge dataframes
     sid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[3]
 
-
-    rtm_sub['sample_id'] = sid.copy()
-
+    rtm_sub['sample_id'] = sid
+    # rtm_sub['sample_id'] = sid.copy()
 
     # convert contamination_rate to contamination_pct
-
     rtm_sub['contamination_pct'] = (rtm_sub['contamination_rate'] * 100)
-
 
     # aligned_bases (CN)
     # duplicate_bases (DC)
@@ -90,28 +70,17 @@ def run(recent_merge_report, new_metrics_file, output_file):
     # unique_aligned_gb = unique_aligned_bases / 1_000_000_000
     rtm_sub['unique_aligned_gb'] = (rtm_sub['aligned_bases'] - rtm_sub['duplicate_bases']) / 1_000_000_000
 
-
     # TODO
     # results (PASS or FAIL)
 
 
-    # ## new metrics (KW)
-
+    # new metrics (R&D group)
     nm = pd.read_excel(new_metrics_file, sheet_name='Sheet1')
-
-
     d2 = {c: normalize_name(c) for c in nm.columns}
-
-
     nm.rename(columns=d2, inplace=True)
 
-
-    # ### merge dataframes (merge_sub, nm)
-
-    # m = pd.merge(at_sub, appl_sub, how = 'outer', left_on=['Prefix'], right_on=['Midpool suffix'])
-
+    # merge dataframes (merge_sub, nm)
     m = pd.merge(rtm_sub, nm, how='outer', left_on='sample_id', right_on='sample_id')
-
 
     # TODO
     # make a dictionary {'Abbrev': 'cohort name'}, add a column 'collection'
@@ -160,9 +129,7 @@ def run(recent_merge_report, new_metrics_file, output_file):
         # results # TODO
     ]
 
-
     tmqc = m[tm_cols]
-
 
     rpt_cols = [
         'sample_id',
@@ -178,9 +145,7 @@ def run(recent_merge_report, new_metrics_file, output_file):
         'contamination_pct'
     ]
 
-
     rpt = m[rpt_cols]
-
 
     # If you wish to write to more than one sheet in the workbook, 
     # it is necessary to specify an ExcelWriter object
@@ -189,7 +154,6 @@ def run(recent_merge_report, new_metrics_file, output_file):
     # with pd.ExcelWriter('output.xlsx') as writer:  # doctest: +SKIP
     #     df1.to_excel(writer, sheet_name='Sheet_name_1')
     #     df2.to_excel(writer, sheet_name='Sheet_name_2')
-
 
     with pd.ExcelWriter(output_file) as writer:
         rpt.to_excel(writer, sheet_name='tab3')
