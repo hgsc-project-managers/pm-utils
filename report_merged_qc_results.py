@@ -9,6 +9,77 @@ import re
 import pandas as pd
 
 
+SUB_COLS = [
+    'merge_name',
+    'merge_finished_date',
+    'aligned_bases', # qc only
+    'duplicate_bases', # qc only
+    'aligned_bases_pct', # qc only
+    'average_coverage',
+    'chimeric_rate', # qc only
+    'per_ten_coverage_bases',
+    'per_twenty_coverage_bases',
+    'q20_bases',
+    'contamination_rate'
+]
+
+TM_COLS = [
+    # weekly_report
+    'sample_id',
+    'collection',
+    'pf_hq_aligned_q20_bases',
+    'mean_insert_size_library_avg',
+    'average_coverage',
+    'wgs_het_snp_q',
+    'wgs_het_snp_sensitivity',
+    'per_ten_coverage_bases',
+    'per_twenty_coverage_bases',
+    'q20_bases',
+    'contamination_pct',
+    # qc only
+    'unique_aligned_gb',
+    'aligned_bases_pct',
+    'chimeric_rate',
+    'merge_name',
+    'merge_finished_date',
+    'merge_cram_path',
+    'results'
+]
+
+RPT_COLS = [
+    'sample_id',
+    'collection',
+    'pf_hq_aligned_q20_bases',
+    'mean_insert_size_library_avg',
+    'average_coverage',
+    'wgs_het_snp_q',
+    'wgs_het_snp_sensitivity',
+    'per_ten_coverage_bases',
+    'per_twenty_coverage_bases',
+    'q20_bases',
+    'contamination_pct'
+]
+
+COLLECTION_DICT = {
+        'Legacy': 'TOPMed Control',
+        'TMHASC': 'Harvard SCD'
+}
+
+# columns in weekly report tab3 'Production Metrics'
+# External ID # extract from merge_name
+# Collection # cohort?
+# PF HQ Aligned Q20 Bases # new
+# Mean Insert Size (Library AVG) # new
+# Mean Coverage (Raw) # Average Coverage?
+# WGS HET SNP Q # new
+# WGS HET SNP SENSITIVITY # new
+# Per 10 Coverage Bases
+# Per 20 Coverage Bases
+# Q20 Bases
+# Contamination % # convert Contamination Rate to Contamination %
+# Notes
+
+
 def main():
     args = parse_args()
     run(args.recent_merge_report, args.new_metrics_file, args.output_file)
@@ -33,32 +104,15 @@ def run(recent_merge_report, new_metrics_file, output_file):
     d1 = {c: normalize_name(c) for c in rtm.columns}
     rtm.rename(columns=d1, inplace=True)
 
-    sub_cols = [
-        'merge_name',
-        'merge_finished_date',
-        'aligned_bases', # qc only
-        'duplicate_bases', # qc only
-        'aligned_bases_pct', # qc only
-        'average_coverage',
-        'chimeric_rate', # qc only
-        'per_ten_coverage_bases',
-        'per_twenty_coverage_bases',
-        'q20_bases',
-        'contamination_rate'
-    ]
-
     # use loc to avoid warning message
-    rtm_sub = rtm.loc[:,sub_cols]
+    rtm_sub = rtm.loc[:, SUB_COLS]
 
     # extract abbrev from merge_name
     cid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[2]
+
     # TODO add default value using defaultdict
-    collection_dict = {
-            'Legacy': 'TOPMed Control',
-            'TMHASC': 'Harvard SCD'
-    }
     # add a column 'collection'
-    rtm_sub['collection'] = cid.map(collection_dict)
+    rtm_sub['collection'] = cid.map(COLLECTION_DICT)
 
     # extract sample_id from merge_name
     sid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[3]
@@ -73,11 +127,6 @@ def run(recent_merge_report, new_metrics_file, output_file):
     # duplicate_bases (DC)
 
     # pandas broadcasting operation
-    # val1_minus_val10 = df["Val1"] - df["Val10"]
-    # df['Val_Diff'] = df['Val10'] - df['Val1']
-
-    # unique_aligned_bases = aligned_bases - duplicate_bases
-    # unique_aligned_gb = unique_aligned_bases / 1_000_000_000
     rtm_sub['unique_aligned_gb'] = (
         rtm_sub['aligned_bases'] - rtm_sub['duplicate_bases']
     ) / 1_000_000_000
@@ -120,60 +169,8 @@ def run(recent_merge_report, new_metrics_file, output_file):
     # TODO track weeks
     # will contain output for at least the last 4 weeks along with metrics
 
-    # columnds in weekly report tab3 'Production Metrics'
-    # External ID # extract from merge_name
-    # Collection # cohort?
-    # PF HQ Aligned Q20 Bases # new
-    # Mean Insert Size (Library AVG) # new
-    # Mean Coverage (Raw) # Average Coverage?
-    # WGS HET SNP Q # new
-    # WGS HET SNP SENSITIVITY # new
-    # Per 10 Coverage Bases
-    # Per 20 Coverage Bases
-    # Q20 Bases
-    # Contamination % # convert Contamination Rate to Contamination %
-    # Notes
-
-    tm_cols = [
-        # weekly_report
-        'sample_id',
-        'collection',
-        'pf_hq_aligned_q20_bases',
-        'mean_insert_size_library_avg',
-        'average_coverage',
-        'wgs_het_snp_q',
-        'wgs_het_snp_sensitivity',
-        'per_ten_coverage_bases',
-        'per_twenty_coverage_bases',
-        'q20_bases',
-        'contamination_pct',
-        # qc only
-        'unique_aligned_gb',
-        'aligned_bases_pct',
-        'chimeric_rate',
-        'merge_name',
-        'merge_finished_date',
-        'merge_cram_path',
-        'results'
-    ]
-
-    tmqc = m[tm_cols]
-
-    rpt_cols = [
-        'sample_id',
-        'collection',
-        'pf_hq_aligned_q20_bases',
-        'mean_insert_size_library_avg',
-        'average_coverage',
-        'wgs_het_snp_q',
-        'wgs_het_snp_sensitivity',
-        'per_ten_coverage_bases',
-        'per_twenty_coverage_bases',
-        'q20_bases',
-        'contamination_pct'
-    ]
-
-    rpt = m[rpt_cols]
+    tmqc = m[TM_COLS]
+    rpt = m[RPT_COLS]
 
     # If you wish to write to more than one sheet in the workbook, 
     # it is necessary to specify an ExcelWriter object
