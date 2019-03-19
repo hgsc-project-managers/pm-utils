@@ -98,6 +98,30 @@ def parse_args():
 
 
 def run(recent_merge_report, new_metrics_file, output_file):
+    rtm_sub = load_merge_report(recent_merge_report)
+    nm = load_metrics(new_metrics_file)
+
+    # merge dataframes (merge_sub, nm)
+    m = pd.merge(rtm_sub, nm, how='outer', left_on='sample_id', right_on='sample_id')
+
+    # TODO track weeks
+    # will contain output for at least the last 4 weeks along with metrics
+
+    tmqc = m[TM_COLS]
+    rpt = m[RPT_COLS]
+
+    # If you wish to write to more than one sheet in the workbook, 
+    # it is necessary to specify an ExcelWriter object
+
+    # df2 = df1.copy()
+    # with pd.ExcelWriter('output.xlsx') as writer:  # doctest: +SKIP
+    #     df1.to_excel(writer, sheet_name='Sheet_name_1')
+    #     df2.to_excel(writer, sheet_name='Sheet_name_2')
+
+    output_results(output_file, rpt, tmqc)
+
+
+def load_merge_report(recent_merge_report):
     rtm = pd.read_excel(recent_merge_report, sheet_name='table ref')
 
     # normalize column names
@@ -156,29 +180,19 @@ def run(recent_merge_report, new_metrics_file, output_file):
     bool_dict = {True: 'PASS', False: 'FAIL'}
     rtm_sub['results'] = rtm_sub['bool_val'].map(bool_dict)
 
+    return rtm_sub
+
+
+def load_metrics(new_metrics_file):
     # new metrics from R&D group
     # will be pushed to LIMS in the future
     nm = pd.read_excel(new_metrics_file, sheet_name='Sheet1')
     d2 = {c: normalize_name(c) for c in nm.columns}
     nm.rename(columns=d2, inplace=True)
+    return nm
 
-    # merge dataframes (merge_sub, nm)
-    m = pd.merge(rtm_sub, nm, how='outer', left_on='sample_id', right_on='sample_id')
 
-    # TODO track weeks
-    # will contain output for at least the last 4 weeks along with metrics
-
-    tmqc = m[TM_COLS]
-    rpt = m[RPT_COLS]
-
-    # If you wish to write to more than one sheet in the workbook, 
-    # it is necessary to specify an ExcelWriter object
-
-    # df2 = df1.copy()
-    # with pd.ExcelWriter('output.xlsx') as writer:  # doctest: +SKIP
-    #     df1.to_excel(writer, sheet_name='Sheet_name_1')
-    #     df2.to_excel(writer, sheet_name='Sheet_name_2')
-
+def output_results(output_file, rpt, tmqc):
     with pd.ExcelWriter(output_file) as writer:
         rpt.to_excel(writer, sheet_name='tab3')
         tmqc.to_excel(writer, sheet_name='tm_qc')
