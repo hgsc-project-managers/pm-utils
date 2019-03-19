@@ -141,28 +141,19 @@ def load_merge_report(recent_merge_report):
     ) / 1_000_000_000
 
     # add qc results 'PASS' or 'FAIL'
-    b1 = (rtm_sub['unique_aligned_gb'] > 90.0) | (
-        rtm_sub['unique_aligned_gb'] == 90.0
-    )
-    b2 = (rtm_sub['aligned_bases_pct'] > 90.0) | (
-        rtm_sub['aligned_bases_pct'] == 90.0
-    )
-    b3 = (rtm_sub['average_coverage'] > 30.0) | (
-        rtm_sub['average_coverage'] == 30.0
-    )
-    b4 = (rtm_sub['per_ten_coverage_bases'] > 95.0) | (
-        rtm_sub['per_ten_coverage_bases'] == 95.0
-    )
-    b5 = (rtm_sub['per_twenty_coverage_bases'] > 90.0) | (
-        rtm_sub['per_twenty_coverage_bases'] == 90.0
-    )
-    b6 = (rtm_sub['q20_bases'] > 87_000_000_000) | (
-        rtm_sub['q20_bases'] == 87_000_000_000
-    )
-    b7 = (rtm_sub['contamination_pct'] < 3.0)
-    b8 = (rtm_sub['chimeric_rate'] < 5.0)
-    good = b1 & b2 & b3 & b4 & b5 & b6 & b7 & b8
-    rtm_sub['results'] = good.map({True: 'PASS', False: 'FAIL'})
+    # Negative checks, should all be False
+    n1 = rtm_sub['unique_aligned_gb'] < 90.0
+    n2 = rtm_sub['aligned_bases_pct'] < 90.0
+    n3 = rtm_sub['average_coverage'] < 30.0
+    n4 = rtm_sub['per_ten_coverage_bases'] < 95.0
+    n5 = rtm_sub['per_twenty_coverage_bases'] < 90.0
+    n6 = rtm_sub['q20_bases'] < 87_000_000_000
+    # Positive checks, should all be True
+    p1 = rtm_sub['contamination_pct'] < 3.0
+    p2 = rtm_sub['chimeric_rate'] < 5.0
+    # Combined.
+    all_checks_good = p1 & p2 & ~(n1 | n2 | n3 | n4 | n5 | n6)
+    rtm_sub['results'] = all_checks_good.map({True: 'PASS', False: 'FAIL'})
 
     return rtm_sub
 
