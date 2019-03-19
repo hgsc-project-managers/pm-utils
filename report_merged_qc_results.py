@@ -152,7 +152,6 @@ def run(recent_merge_report, new_metrics_file, output_file):
     )
     b7 = (rtm_sub['contamination_pct'] < 3.0)
     b8 = (rtm_sub['chimeric_rate'] < 5.0)
-    # TODO Dataframe.bool()
     rtm_sub['bool_val'] = b1 & b2 & b3 & b4 & b5 & b6 & b7 & b8
     bool_dict = {True: 'PASS', False: 'FAIL'}
     rtm_sub['results'] = rtm_sub['bool_val'].map(bool_dict)
