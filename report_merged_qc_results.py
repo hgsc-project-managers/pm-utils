@@ -100,24 +100,12 @@ def parse_args():
 def run(recent_merge_report, new_metrics_file, output_file):
     rtm_sub = load_merge_report(recent_merge_report)
     nm = load_metrics(new_metrics_file)
-
-    # merge dataframes (merge_sub, nm)
-    m = pd.merge(rtm_sub, nm, how='outer', left_on='sample_id', right_on='sample_id')
-
+    m = pd.merge(rtm_sub, nm, how='outer',
+                 left_on='sample_id', right_on='sample_id')
     # TODO track weeks
     # will contain output for at least the last 4 weeks along with metrics
-
     tmqc = m[TM_COLS]
     rpt = m[RPT_COLS]
-
-    # If you wish to write to more than one sheet in the workbook, 
-    # it is necessary to specify an ExcelWriter object
-
-    # df2 = df1.copy()
-    # with pd.ExcelWriter('output.xlsx') as writer:  # doctest: +SKIP
-    #     df1.to_excel(writer, sheet_name='Sheet_name_1')
-    #     df2.to_excel(writer, sheet_name='Sheet_name_2')
-
     output_results(output_file, rpt, tmqc)
 
 
