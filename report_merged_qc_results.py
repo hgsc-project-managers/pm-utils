@@ -121,16 +121,13 @@ def load_merge_report(recent_merge_report):
 
     # extract abbrev from merge_name
     cid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[2]
-
     # TODO add default value using defaultdict
     # add a column 'collection'
     rtm_sub['collection'] = cid.map(COLLECTION_DICT)
 
     # extract sample_id from merge_name
     sid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[3]
-
     rtm_sub['sample_id'] = sid
-    # rtm_sub['sample_id'] = sid.copy()
 
     # convert contamination_rate to contamination_pct
     rtm_sub['contamination_pct'] = (rtm_sub['contamination_rate'] * 100)
@@ -164,9 +161,8 @@ def load_merge_report(recent_merge_report):
     )
     b7 = (rtm_sub['contamination_pct'] < 3.0)
     b8 = (rtm_sub['chimeric_rate'] < 5.0)
-    rtm_sub['bool_val'] = b1 & b2 & b3 & b4 & b5 & b6 & b7 & b8
-    bool_dict = {True: 'PASS', False: 'FAIL'}
-    rtm_sub['results'] = rtm_sub['bool_val'].map(bool_dict)
+    good = b1 & b2 & b3 & b4 & b5 & b6 & b7 & b8
+    rtm_sub['results'] = good.map({True: 'PASS', False: 'FAIL'})
 
     return rtm_sub
 
