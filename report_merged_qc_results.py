@@ -6,6 +6,8 @@
 import argparse
 import re
 
+from collections import defaultdict
+
 import pandas as pd
 
 
@@ -60,10 +62,10 @@ RPT_COLS = [
     'contamination_pct'
 ]
 
-COLLECTION_DICT = {
-        'Legacy': 'TOPMed Control',
-        'TMHASC': 'Harvard SCD'
-}
+COLLECTION_LIST= [
+        ('Legacy', 'TOPMed Control'),
+        ('TMHASC', 'Harvard SCD')
+]
 
 # columns in weekly report tab3 'Production Metrics'
 # External ID # extract from merge_name
@@ -121,9 +123,11 @@ def load_merge_report(recent_merge_report):
 
     # extract abbrev from merge_name
     cid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[2]
-    # TODO add default value using defaultdict
+    # add default value using defaultdict
+    d2 = defaultdict(lambda: "NaN")
+    d2.update(COLLECTION_LIST)
     # add a column 'collection'
-    rtm_sub['collection'] = cid.map(COLLECTION_DICT)
+    rtm_sub['collection'] = cid.map(d2)
 
     # extract sample_id from merge_name
     sid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[3]
@@ -131,9 +135,6 @@ def load_merge_report(recent_merge_report):
 
     # convert contamination_rate to contamination_pct
     rtm_sub['contamination_pct'] = (rtm_sub['contamination_rate'] * 100)
-
-    # aligned_bases (CN)
-    # duplicate_bases (DC)
 
     # pandas broadcasting operation
     rtm_sub['unique_aligned_gb'] = (
@@ -151,7 +152,7 @@ def load_merge_report(recent_merge_report):
     # Positive checks, should all be True
     p1 = rtm_sub['contamination_pct'] < 3.0
     p2 = rtm_sub['chimeric_rate'] < 5.0
-    # Combined.
+    # Combined
     all_checks_good = p1 & p2 & ~(n1 | n2 | n3 | n4 | n5 | n6)
     rtm_sub['results'] = all_checks_good.map({True: 'PASS', False: 'FAIL'})
 
