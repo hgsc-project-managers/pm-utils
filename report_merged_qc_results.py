@@ -14,11 +14,11 @@ import pandas as pd
 SUB_COLS = [
     'merge_name',
     'merge_finished_date',
-    'aligned_bases', # qc only
-    'duplicate_bases', # qc only
-    'aligned_bases_pct', # qc only
+    'aligned_bases',  # qc only
+    'duplicate_bases',  # qc only
+    'aligned_bases_pct',  # qc only
     'average_coverage',
-    'chimeric_rate', # qc only
+    'chimeric_rate',  # qc only
     'per_ten_coverage_bases',
     'per_twenty_coverage_bases',
     'q20_bases',
@@ -62,9 +62,9 @@ RPT_COLS = [
     'contamination_pct'
 ]
 
-COLLECTION_LIST= [
-        ('Legacy', 'TOPMed Control'),
-        ('TMHASC', 'Harvard SCD')
+COLLECTION_LIST = [
+    ('Legacy', 'TOPMed Control'),
+    ('TMHASC', 'Harvard SCD')
 ]
 
 # columns in weekly report tab3 'Production Metrics'
@@ -180,7 +180,7 @@ def normalize_name(field_name):
         (r'/', '_per_'),
         (r'%', '_pct_'),
         (r'\W', '_'),
-        (r'^_+', ''), # remove '_' if field_name begins with '_'
+        (r'^_+', ''),  # remove '_' if field_name begins with '_'
         (r'_+$', ''),
         (r'__+', '_'),
     )
