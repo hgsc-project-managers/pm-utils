@@ -124,7 +124,7 @@ def load_merge_report(recent_merge_report):
     # extract abbrev from merge_name
     cid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[2]
     # add default value using defaultdict
-    d2 = defaultdict(lambda: "None")
+    d2 = defaultdict(lambda: None)
     d2.update(COLLECTION_LIST)
     # add a column 'collection'
     rtm_sub['collection'] = cid.map(d2)
