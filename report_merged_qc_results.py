@@ -6,7 +6,80 @@
 import argparse
 import re
 
+from collections import defaultdict
+
 import pandas as pd
+
+
+SUB_COLS = [
+    'merge_name',
+    'merge_finished_date',
+    'aligned_bases',  # qc only
+    'duplicate_bases',  # qc only
+    'aligned_bases_pct',  # qc only
+    'average_coverage',
+    'chimeric_rate',  # qc only
+    'per_ten_coverage_bases',
+    'per_twenty_coverage_bases',
+    'q20_bases',
+    'contamination_rate'
+]
+
+TM_COLS = [
+    # weekly_report
+    'sample_id',
+    'collection',
+    'pf_hq_aligned_q20_bases',
+    'mean_insert_size_library_avg',
+    'average_coverage',
+    'wgs_het_snp_q',
+    'wgs_het_snp_sensitivity',
+    'per_ten_coverage_bases',
+    'per_twenty_coverage_bases',
+    'q20_bases',
+    'contamination_pct',
+    # qc only
+    'unique_aligned_gb',
+    'aligned_bases_pct',
+    'chimeric_rate',
+    'merge_name',
+    'merge_finished_date',
+    'merge_cram_path',
+    'results'
+]
+
+RPT_COLS = [
+    'sample_id',
+    'collection',
+    'pf_hq_aligned_q20_bases',
+    'mean_insert_size_library_avg',
+    'average_coverage',
+    'wgs_het_snp_q',
+    'wgs_het_snp_sensitivity',
+    'per_ten_coverage_bases',
+    'per_twenty_coverage_bases',
+    'q20_bases',
+    'contamination_pct'
+]
+
+COLLECTION_LIST = [
+    ('Legacy', 'TOPMed Control'),
+    ('TMHASC', 'Harvard SCD')
+]
+
+# columns in weekly report tab3 'Production Metrics'
+# External ID # extract from merge_name
+# Collection # cohort?
+# PF HQ Aligned Q20 Bases # new
+# Mean Insert Size (Library AVG) # new
+# Mean Coverage (Raw) # Average Coverage?
+# WGS HET SNP Q # new
+# WGS HET SNP SENSITIVITY # new
+# Per 10 Coverage Bases
+# Per 20 Coverage Bases
+# Q20 Bases
+# Contamination % # convert Contamination Rate to Contamination %
+# Notes
 
 
 def main():
@@ -27,165 +100,75 @@ def parse_args():
 
 
 def run(recent_merge_report, new_metrics_file, output_file):
+    rtm_sub = load_merge_report(recent_merge_report)
+    nm = load_metrics(new_metrics_file)
+    m = pd.merge(rtm_sub, nm, how='outer',
+                 left_on='sample_id', right_on='sample_id')
+    # TODO track weeks
+    # will contain output for at least the last 4 weeks along with metrics
+    tmqc = m[TM_COLS]
+    rpt = m[RPT_COLS]
+    output_results(output_file, rpt, tmqc)
+
+
+def load_merge_report(recent_merge_report):
     rtm = pd.read_excel(recent_merge_report, sheet_name='table ref')
 
-
-    rtm_column_names = []
-
-    for col_name in rtm.columns:
-        rtm_column_names.append(col_name)
-
-
     # normalize column names
-
-    rtm_new_column_names = []
-
-    for col_name in rtm.columns:
-        col_name = normalize_name(col_name)
-        rtm_new_column_names.append(col_name)
-
-
     d1 = {c: normalize_name(c) for c in rtm.columns}
-
-
     rtm.rename(columns=d1, inplace=True)
 
+    # use loc to avoid warning message
+    rtm_sub = rtm.loc[:, SUB_COLS]
 
-    tm_cols = [
-        'merge_name',
-        'aligned_bases', # qc only
-        'duplicate_bases', # qc only
-        'aligned_bases_pct', # qc only
-        'average_coverage',
-        'chimeric_rate', # qc only
-        'per_ten_coverage_bases',
-        'per_twenty_coverage_bases',
-        'q20_bases',
-        'contamination_rate'
-    ]
+    # extract abbrev from merge_name
+    cid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[2]
+    # add default value using defaultdict
+    d2 = defaultdict(lambda: None)
+    d2.update(COLLECTION_LIST)
+    # add a column 'collection'
+    rtm_sub['collection'] = cid.map(d2)
 
-
-    rtm_sub = rtm.loc[:,tm_cols]
-
-
+    # extract sample_id from merge_name
     sid = rtm_sub['merge_name'].str.split('_', n=5, expand=True)[3]
-
-
-    rtm_sub['sample_id'] = sid.copy()
-
+    rtm_sub['sample_id'] = sid
 
     # convert contamination_rate to contamination_pct
-
     rtm_sub['contamination_pct'] = (rtm_sub['contamination_rate'] * 100)
 
+    # pandas broadcasting operation
+    rtm_sub['unique_aligned_gb'] = (
+        rtm_sub['aligned_bases'] - rtm_sub['duplicate_bases']
+    ) / 1_000_000_000
 
-    # aligned_bases (CN)
-    # duplicate_bases (DC)
+    # add qc results 'PASS' or 'FAIL'
+    # Negative checks, should all be False
+    n1 = rtm_sub['unique_aligned_gb'] < 90.0
+    n2 = rtm_sub['aligned_bases_pct'] < 90.0
+    n3 = rtm_sub['average_coverage'] < 30.0
+    n4 = rtm_sub['per_ten_coverage_bases'] < 95.0
+    n5 = rtm_sub['per_twenty_coverage_bases'] < 90.0
+    n6 = rtm_sub['q20_bases'] < 87_000_000_000
+    # Positive checks, should all be True
+    p1 = rtm_sub['contamination_pct'] < 3.0
+    p2 = rtm_sub['chimeric_rate'] < 5.0
+    # Combined
+    all_checks_good = p1 & p2 & ~(n1 | n2 | n3 | n4 | n5 | n6)
+    rtm_sub['results'] = all_checks_good.map({True: 'PASS', False: 'FAIL'})
 
-    # pandas broadcasting operateion
-    # val1_minus_val10 = df["Val1"] - df["Val10"]
-    # df['Val_Diff'] = df['Val10'] - df['Val1']
-
-    # unique_aligned_bases = aligned_bases - duplicate_bases # Exemplar RT 13348
-    # unique_aligned_gb = unique_aligned_bases / 1_000_000_000
-    rtm_sub['unique_aligned_gb'] = (rtm_sub['aligned_bases'] - rtm_sub['duplicate_bases']) / 1_000_000_000
+    return rtm_sub
 
 
-    # TODO
-    # results (PASS or FAIL)
-
-
-    # ## new metrics (KW)
-
+def load_metrics(new_metrics_file):
+    # new metrics from R&D group
+    # will be pushed to LIMS in the future
     nm = pd.read_excel(new_metrics_file, sheet_name='Sheet1')
-
-
     d2 = {c: normalize_name(c) for c in nm.columns}
-
-
     nm.rename(columns=d2, inplace=True)
+    return nm
 
 
-    # ### merge dataframes (merge_sub, nm)
-
-    # m = pd.merge(at_sub, appl_sub, how = 'outer', left_on=['Prefix'], right_on=['Midpool suffix'])
-
-    m = pd.merge(rtm_sub, nm, how='outer', left_on='sample_id', right_on='sample_id')
-
-
-    # fill column 'collection' with a value
-
-    m['collection'] = 'Harvard SCD'
-
-    # new: metrics from Kim Wlker's group
-
-    # Week
-    # External ID # extract from merge_name
-    # Collection # cohort?
-    # PF HQ Aligned Q20 Bases # new
-    # Mean Insert Size (Library AVG) # new
-    # Mean Coverage (Raw) # Average Coverage?
-    # WGS HET SNP Q # new
-    # WGS HET SNP SENSITIVITY # new
-    # Per 10 Coverage Bases
-    # Per 20 Coverage Bases
-    # Q20 Bases
-    # Contamination % # convert Contamination Rate to Contamination %
-    # Notes
-
-    tm_cols = [
-        # weekly_report
-        'sample_id',
-        'collection',
-        'pf_hq_aligned_q20_bases',
-        'mean_insert_size_library_avg',
-        'average_coverage',
-        'wgs_het_snp_q',
-        'wgs_het_snp_sensitivity',
-        'per_ten_coverage_bases',
-        'per_twenty_coverage_bases',
-        'q20_bases',
-        'contamination_pct',
-        # qc only
-        'unique_aligned_gb',
-        'aligned_bases_pct',
-        'chimeric_rate',
-        'merge_name',
-        'merge_cram_path'
-        # results # TODO
-    ]
-
-
-    tmqc = m[tm_cols]
-
-
-    rpt_cols = [
-        'sample_id',
-        'collection',
-        'pf_hq_aligned_q20_bases',
-        'mean_insert_size_library_avg',
-        'average_coverage',
-        'wgs_het_snp_q',
-        'wgs_het_snp_sensitivity',
-        'per_ten_coverage_bases',
-        'per_twenty_coverage_bases',
-        'q20_bases',
-        'contamination_pct'
-    ]
-
-
-    rpt = m[rpt_cols]
-
-
-    # If you wish to write to more than one sheet in the workbook, 
-    # it is necessary to specify an ExcelWriter object
-
-    # df2 = df1.copy()
-    # with pd.ExcelWriter('output.xlsx') as writer:  # doctest: +SKIP
-    #     df1.to_excel(writer, sheet_name='Sheet_name_1')
-    #     df2.to_excel(writer, sheet_name='Sheet_name_2')
-
-
+def output_results(output_file, rpt, tmqc):
     with pd.ExcelWriter(output_file) as writer:
         rpt.to_excel(writer, sheet_name='tab3')
         tmqc.to_excel(writer, sheet_name='tm_qc')
@@ -197,7 +180,7 @@ def normalize_name(field_name):
         (r'/', '_per_'),
         (r'%', '_pct_'),
         (r'\W', '_'),
-        (r'^_+', ''),
+        (r'^_+', ''),  # remove '_' if field_name begins with '_'
         (r'_+$', ''),
         (r'__+', '_'),
     )
