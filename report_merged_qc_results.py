@@ -62,17 +62,21 @@ RPT_COLS = [
     'contamination_pct'
 ]
 
+# map abbrev (from merge_name in input report) to the Study/Cohort name
 COLLECTION_LIST = [
     ('Legacy', 'TOPMed Control'),
-    ('TMHASC', 'Harvard SCD')
+    ('TMHASC', 'Harvard SCD'),
+    ('TMCGVC', 'Causal Genetic Variants of Cardiomyopathy'),
+    ('TMGCUC', 'Genetic Causes of Unexplained Cardiomyopathies'),
+    ('TMREDS', 'Sickle Cell Disease REDS III')
 ]
 
 # columns in weekly report tab3 'Production Metrics'
 # External ID # extract from merge_name
-# Collection # cohort?
+# Collection # Study/Cohort
 # PF HQ Aligned Q20 Bases # new
 # Mean Insert Size (Library AVG) # new
-# Mean Coverage (Raw) # Average Coverage?
+# Mean Coverage (Raw) # new Average Coverage
 # WGS HET SNP Q # new
 # WGS HET SNP SENSITIVITY # new
 # Per 10 Coverage Bases
