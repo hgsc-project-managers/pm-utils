@@ -174,8 +174,8 @@ def load_metrics(new_metrics_file):
 
 def output_results(output_file, rpt, tmqc):
     with pd.ExcelWriter(output_file) as writer:
-        rpt.to_excel(writer, sheet_name='tab3')
-        tmqc.to_excel(writer, sheet_name='tm_qc')
+        rpt.to_excel(writer, sheet_name='tab3', index=False)
+        tmqc.to_excel(writer, sheet_name='tm_qc', index=False)
 
 
 def normalize_name(field_name):
