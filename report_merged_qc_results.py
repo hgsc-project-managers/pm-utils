@@ -1,7 +1,33 @@
 #!/usr/bin/env python
+"""
+New TOPMed metrics be added to Exemplar LIMS merge report:
+- PF HQ Aligned Q20 Bases
+- Mean Insert Size (Library AVG) # corrected value
+- WGS HET SNP Q
+- WGS HET SNP SENSITIVITY
 
-"""Combines output weekly merge report (from QC group) with new metrics report
-(from R&D group) and generates an Excel workbook with two sheets."""
+Update code that uses a single input file (example in below) and
+generates an XLSX workbook with two sheets:
+- tab3 for TOPMed Weekly Report, 'Production Metrics' (tab3)
+- tm_qc for TOPMed sample QC
+
+e.g.
+- merge_report_with_new_topmed_metrics.xlsx
+
+Columns in TOPMed Weekly Report tab4 'Production Metrics':
+1 External ID  # extract from merge_name
+2 Collection  # Study/Cohort
+3 PF HQ Aligned Q20 Bases # new
+4 Mean Insert Size (Library AVG)  # new
+5 Mean Coverage (Raw)  # new correct value
+6 WGS HET SNP Q  # new
+7 WGS HET SNP SENSITIVITY  # new
+8 Per 10 Coverage Bases
+9 Per 20 Coverage Bases
+10 Q20 Bases
+11 Contamination %  # convert Contamination Rate to Contamination %
+12 Notes
+"""
 
 import argparse
 import re
@@ -70,20 +96,6 @@ COLLECTION_LIST = [
     ("TMGCUC", "Genetic Causes of Unexplained Cardiomyopathies"),
     ("TMREDS", "Sickle Cell Disease REDS III"),
 ]
-
-# columns in weekly report tab3 'Production Metrics'
-# External ID  # extract from merge_name
-# Collection  # Study/Cohort
-# PF HQ Aligned Q20 Bases # new
-# Mean Insert Size (Library AVG)  # new
-# Mean Coverage (Raw)  # new correct value
-# WGS HET SNP Q  # new
-# WGS HET SNP SENSITIVITY  # new
-# Per 10 Coverage Bases
-# Per 20 Coverage Bases
-# Q20 Bases
-# Contamination %  # convert Contamination Rate to Contamination %
-# Notes
 
 
 def main():
