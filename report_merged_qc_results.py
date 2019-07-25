@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 """
 New TOPMed metrics be added to Exemplar LIMS merge report:
 - PF HQ Aligned Q20 Bases
@@ -14,7 +15,7 @@ generates an XLSX workbook with two sheets:
 e.g.
 - merge_report_with_new_topmed_metrics.xlsx
 
-Columns in TOPMed Weekly Report tab4 'Production Metrics':
+Columns in TOPMed Weekly Report tab3 'Production Metrics':
 1 External ID  # extract from merge_name
 2 Collection  # Study/Cohort
 3 PF HQ Aligned Q20 Bases # new
