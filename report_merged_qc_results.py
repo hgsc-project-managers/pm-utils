@@ -110,7 +110,8 @@ def main():
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "recent_merge_report", help="*.xlsx, usually downloaded from Exemplar LIMS"
+        "recent_merge_report",
+        help="*.xlsx, usually downloaded from Exemplar LIMS",
     )
     parser.add_argument("output_file", help="should end with .xlsx")
     args = parser.parse_args()
