@@ -161,7 +161,7 @@ def load_merge_report(recent_merge_report):
     rtm_sub['contamination_pct'] = (
             rtm_sub['contamination_pct']
             .astype(float)
-            .map(lambda x: '%2.4f' %x)
+            .round(decimals=4)
     )
 
     # pandas broadcasting operation
@@ -178,7 +178,7 @@ def load_merge_report(recent_merge_report):
     n5 = rtm_sub["per_twenty_coverage_bases"] < 90.0
     n6 = rtm_sub["q20_bases"] < 87_000_000_000
     # Positive checks, should all be True
-    p1 = rtm_sub["contamination_pct"].astype(float) < 3.0
+    p1 = rtm_sub["contamination_pct"] < 3.0
     p2 = rtm_sub["chimeric_rate"] < 5.0
     # Combined
     all_checks_good = p1 & p2 & ~(n1 | n2 | n3 | n4 | n5 | n6)
