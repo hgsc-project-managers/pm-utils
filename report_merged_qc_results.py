@@ -2,10 +2,10 @@
 
 """
 New TOPMed metrics be added to Exemplar LIMS merge report:
-- PF HQ Aligned Q20 Bases
-- Mean Insert Size (Library AVG) # corrected value
-- WGS HET SNP Q
-- WGS HET SNP SENSITIVITY
+- PF_HQ_Aligned_Q20_Bases
+- MEAN_INSERT_SIZE  # corrected value for Mean Insert Size (Library AVG)
+- WGS_HET_SNP_Q
+- WGS_HET_SNP_SENSITIVITY
 
 Update code that uses a single input file (example in below) and
 generates an XLSX workbook with two sheets:
