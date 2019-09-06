@@ -189,8 +189,8 @@ def load_merge_report(recent_merge_report):
 
 def output_results(output_file, rpt, tmqc):
     with pd.ExcelWriter(output_file) as writer:
-        rpt.to_excel(writer, sheet_name="tab3", index=False)
-        tmqc.to_excel(writer, sheet_name="tm_qc", index=False)
+        rpt.to_excel(writer, sheet_name="tab3", float_format="%.4f", engine='xlsxwriter', index=False)
+        tmqc.to_excel(writer, sheet_name="tm_qc", float_format="%.4f", engine='xlsxwriter', index=False)
 
 
 def normalize_name(field_name):
