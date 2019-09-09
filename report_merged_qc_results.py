@@ -51,7 +51,7 @@ SUB_COLS = [
     "contamination_rate",
     # new metrics
     "wgs_het_snp_q",
-    "mean_insert_size_library_avg",
+    "mean_insert_size",
     "wgs_het_snp_sensitivity",
     "pf_hq_aligned_q20_bases",
 ]
@@ -61,7 +61,7 @@ TM_COLS = [
     "sample_id",
     "collection",
     "pf_hq_aligned_q20_bases",
-    "mean_insert_size_library_avg",
+    "mean_insert_size",
     "average_coverage",
     "wgs_het_snp_q",
     "wgs_het_snp_sensitivity",
@@ -82,7 +82,7 @@ RPT_COLS = [
     "sample_id",
     "collection",
     "pf_hq_aligned_q20_bases",
-    "mean_insert_size_library_avg",
+    "mean_insert_size",
     "average_coverage",
     "wgs_het_snp_q",
     "wgs_het_snp_sensitivity",
