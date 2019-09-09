@@ -41,6 +41,7 @@ import pandas as pd
 SUB_COLS = [
     "merge_name",
     "merge_finished_date",
+    "results_path",
     "unique_aligned_bases",  # qc only
     "aligned_bases_pct",  # qc only
     "average_coverage",
@@ -74,6 +75,7 @@ TM_COLS = [
     "aligned_bases_pct",
     "chimeric_rate",
     "merge_name",
+    "results_path",
     "merge_finished_date",
     "results",
 ]
