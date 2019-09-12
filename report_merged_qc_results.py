@@ -75,8 +75,8 @@ TM_COLS = [
     "aligned_bases_pct",
     "chimeric_rate",
     "merge_name",
-    "results_path",
     "merge_finished_date",
+    "results_path",
     "results",
 ]
 
