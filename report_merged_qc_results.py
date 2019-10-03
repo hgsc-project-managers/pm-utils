@@ -115,10 +115,10 @@ def parse_args():
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument(
-        "recent_merge_report",
+        "--recent_merge_report",
         help="*.xlsx, usually downloaded from Exemplar LIMS",
     )
-    parser.add_argument("output_file", help="should end with .xlsx")
+    parser.add_argument("--output_file", help="should end with .xlsx")
     args = parser.parse_args()
     return args
 
