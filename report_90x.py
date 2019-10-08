@@ -85,20 +85,6 @@ COLLECTION_LIST = [
     ("TMREDS", "Sickle Cell Disease REDS III"),
 ]
 
-# columns in weekly report tab3 'Production Metrics'
-# External ID  # extract from merge_name
-# Collection  # Study/Cohort
-# PF HQ Aligned Q20 Bases # new
-# Mean Insert Size (Library AVG)  # new
-# Mean Coverage (Raw)  # new correct value
-# WGS HET SNP Q  # new
-# WGS HET SNP SENSITIVITY  # new
-# Per 10 Coverage Bases
-# Per 20 Coverage Bases
-# Q20 Bases
-# Contamination %  # convert Contamination Rate to Contamination %
-# Notes
-
 
 def main():
     args = parse_args()
