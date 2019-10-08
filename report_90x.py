@@ -31,10 +31,10 @@ SUB_COLS = [
 ]
 
 NM_COLS = [
-    'sample_id',
-    'samples',
-    'pct_of_bases_with_60x_coverage',
-    'pct_of_bases_with_70x_coverage',
+    "sample_id",
+    "samples",
+    "pct_of_bases_with_60x_coverage",
+    "pct_of_bases_with_70x_coverage",
 ]
 
 TM_COLS = [
@@ -48,8 +48,8 @@ TM_COLS = [
     "wgs_het_snp_sensitivity",
     "per_ten_coverage_bases",
     "per_twenty_coverage_bases",
-    'pct_of_bases_with_60x_coverage',
-    'pct_of_bases_with_70x_coverage',
+    "pct_of_bases_with_60x_coverage",
+    "pct_of_bases_with_70x_coverage",
     "q20_bases",
     "contamination_pct",
     # internal qc only
