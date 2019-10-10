@@ -13,7 +13,8 @@ import pandas as pd
 from report_merged_qc_results import normalize_name
 
 
-SUB_COLS = [
+# for input files
+RTM_COLS = [
     "merge_name",
     "merge_finished_date",
     "results_path",
@@ -39,7 +40,22 @@ NM_COLS = [
     "pct_of_bases_with_70x_coverage",
 ]
 
-TM_COLS = [
+# for output files
+WKT3_COLS = [
+    "sample_id",
+    "collection",
+    "pf_hq_aligned_q20_bases",
+    "mean_insert_size_library_avg",
+    "average_coverage",
+    "wgs_het_snp_q",
+    "wgs_het_snp_sensitivity",
+    "per_ten_coverage_bases",
+    "per_twenty_coverage_bases",
+    "q20_bases",
+    "contamination_pct",
+]
+
+TMQC_COLS = [
     # weekly_report
     "sample_id",
     "collection",
@@ -62,20 +78,6 @@ TM_COLS = [
     "merge_finished_date",
     "results_path",
     "results",
-]
-
-RPT_COLS = [
-    "sample_id",
-    "collection",
-    "pf_hq_aligned_q20_bases",
-    "mean_insert_size_library_avg",
-    "average_coverage",
-    "wgs_het_snp_q",
-    "wgs_het_snp_sensitivity",
-    "per_ten_coverage_bases",
-    "per_twenty_coverage_bases",
-    "q20_bases",
-    "contamination_pct",
 ]
 
 # map abbrev (from merge_name in input report) to the Study/Cohort name
@@ -114,8 +116,8 @@ def run(recent_merge_report, new_90x_metrics_file, output_file):
     )
     # TODO track weeks
     # will contain output for at least the last 4 weeks along with metrics
-    tmqc = m[TM_COLS]
-    rpt = m[RPT_COLS]
+    tmqc = m[TMQC_COLS]
+    rpt = m[WKT3_COLS]
     output_results(output_file, rpt, tmqc)
 
 
@@ -127,7 +129,7 @@ def load_merge_report(recent_merge_report):
     rtm.rename(columns=d1, inplace=True)
 
     # use loc to avoid warning message
-    rtm_sub = rtm.loc[:, SUB_COLS]
+    rtm_sub = rtm.loc[:, RTM_COLS]
 
     # extract abbrev from merge_name
     cid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[2]
