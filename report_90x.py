@@ -111,9 +111,7 @@ def parse_args():
 def run(recent_merge_report, new_90x_metrics_file, output_file):
     rtm_sub = load_merge_report(recent_merge_report)
     nm_sub = load_metrics(new_90x_metrics_file)
-    m = pd.merge(
-        rtm_sub, nm_sub, how="outer", left_on="sample_id", right_on="sample_id"
-    )
+    m = merge_qc_results(rtm_sub, nm_sub)
     # TODO track weeks
     # will contain output for at least the last 4 weeks along with metrics
     wkt3 = m[WKT3_COLS]
@@ -151,23 +149,6 @@ def load_merge_report(recent_merge_report):
         rtm_sub["unique_aligned_bases"]
     ) / 1_000_000_000
 
-    # add qc results 'PASS' or 'FAIL'
-    # Negative checks, should all be False
-    n1 = rtm_sub["unique_aligned_gb"] < 90.0
-    n2 = rtm_sub["aligned_bases_pct"] < 90.0
-    n3 = rtm_sub["average_coverage"] < 90.0  # 90x metrics
-    n4 = rtm_sub["per_ten_coverage_bases"] < 95.0
-    n5 = rtm_sub["per_twenty_coverage_bases"] < 90.0
-    # n6 = rtm_sub["per_sixty_coverage_bases"] < 95.0  # 90x metrics
-    # n7 = rtm_sub["per_seventy_coverage_bases"] < 90.0  # 90x metrics
-    n8 = rtm_sub["q20_bases"] < 205_000_000_000  # 90x metrics
-    # Positive checks, should all be True
-    p1 = rtm_sub["contamination_pct"] < 3.0
-    p2 = rtm_sub["chimeric_rate"] < 5.0
-    # Combined
-    all_checks_good = p1 & p2 & ~(n1 | n2 | n3 | n4 | n5 | n8)
-    rtm_sub["results"] = all_checks_good.map({True: "PASS", False: "FAIL"})
-
     return rtm_sub
 
 
@@ -182,6 +163,29 @@ def load_metrics(new_90x_metrics_file):
     nm["per_seventy_coverage_bases"] = nm["pct_of_bases_with_70x_coverage"] * 100
     nm_sub = nm.loc[:, NM_COLS]
     return nm_sub
+
+
+def merge_qc_results(rtm_sub, nm_sub):
+    m = pd.merge(
+        rtm_sub, nm_sub, how="outer", left_on="sample_id", right_on="sample_id"
+    )
+    # add qc results 'PASS' or 'FAIL'
+    # Negative checks, should all be False
+    n1 = m["unique_aligned_gb"] < 90.0
+    n2 = m["aligned_bases_pct"] < 90.0
+    n3 = m["average_coverage"] < 90.0  # 90x metrics
+    n4 = m["per_ten_coverage_bases"] < 95.0
+    n5 = m["per_twenty_coverage_bases"] < 90.0
+    n6 = m["per_sixty_coverage_bases"] < 95.0  # 90x metrics
+    n7 = m["per_seventy_coverage_bases"] < 90.0  # 90x metrics
+    n8 = m["q20_bases"] < 205_000_000_000  # 90x metrics
+    # Positive checks, should all be True
+    p1 = m["contamination_pct"] < 3.0
+    p2 = m["chimeric_rate"] < 5.0
+    # Combined
+    all_checks_good = p1 & p2 & ~(n1 | n2 | n3 | n4 | n5 | n6 | n7 | n8)
+    m["results"] = all_checks_good.map({True: "PASS", False: "FAIL"})
+    return m
 
 
 def output_results(output_file, wkt3, tmqc):
