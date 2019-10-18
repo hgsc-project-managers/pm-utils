@@ -88,6 +88,7 @@ TMQC_COLS = [
     "results",
 ]
 
+# TODO add abbrev for newly assigned study Walk-PHaSST SCD & PCGC
 # map abbrev (from merge_name in input report) to the Study/Cohort name
 COLLECTION_LIST = [
     ("Legacy", "TOPMed Control"),
