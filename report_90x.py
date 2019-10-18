@@ -116,9 +116,9 @@ def run(recent_merge_report, new_90x_metrics_file, output_file):
     )
     # TODO track weeks
     # will contain output for at least the last 4 weeks along with metrics
+    wkt3 = m[WKT3_COLS]
     tmqc = m[TMQC_COLS]
-    rpt = m[WKT3_COLS]
-    output_results(output_file, rpt, tmqc)
+    output_results(output_file, wkt3, tmqc)
 
 
 def load_merge_report(recent_merge_report):
@@ -184,9 +184,9 @@ def load_metrics(new_90x_metrics_file):
     return nm_sub
 
 
-def output_results(output_file, rpt, tmqc):
+def output_results(output_file, wkt3, tmqc):
     with pd.ExcelWriter(output_file) as writer:
-        rpt.to_excel(writer, sheet_name="tab3", index=False)
+        wkt3.to_excel(writer, sheet_name="tab3", index=False)
         tmqc.to_excel(writer, sheet_name="tm_qc", index=False)
 
 
