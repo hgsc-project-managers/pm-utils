@@ -34,7 +34,7 @@ RTM_COLS = [
     "q20_bases",
     "contamination_rate",
     # new tm metrics
-    "mean_insert_size",  # corrected column name & value in Exemplar
+    "mean_insert_size",  # corrected column name & value in Exemplar LIMS
     "pf_hq_aligned_q20_bases",
     "wgs_het_snp_q",
     "wgs_het_snp_sensitivity",
@@ -82,6 +82,7 @@ TMQC_COLS = [
     "unique_aligned_gb",
     "aligned_bases_pct",
     "chimeric_rate",
+    # jw_note
     "merge_name",
     "merge_finished_date",
     "results_path",
@@ -130,34 +131,26 @@ def run(recent_merge_report, new_90x_metrics_file, output_file):
 
 def load_merge_report(recent_merge_report):
     rtm = pd.read_excel(recent_merge_report, sheet_name="table ref")
-
     # normalize column names
     d1 = {c: normalize_name(c) for c in rtm.columns}
     rtm.rename(columns=d1, inplace=True)
-
-    # use loc to avoid warning message
+    # use loc to avoid SettingWithCopyWarning warning message
     rtm_sub = rtm.loc[:, RTM_COLS]
-
     # extract abbrev from merge_name
     cid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[2]
-    # add default value using defaultdict
+    # add a column 'collection'
     d2 = defaultdict(lambda: None)
     d2.update(COLLECTION_LIST)
-    # add a column 'collection'
     rtm_sub["collection"] = cid.map(d2)
-
     # extract sample_id from merge_name
     sid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[3]
     rtm_sub["sample_id"] = sid
-
     # convert contamination_rate to contamination_pct
     rtm_sub["contamination_pct"] = rtm_sub["contamination_rate"] * 100
-
     # pandas broadcasting operation
     rtm_sub["unique_aligned_gb"] = (
         rtm_sub["unique_aligned_bases"]
     ) / 1_000_000_000
-
     return rtm_sub
 
 
