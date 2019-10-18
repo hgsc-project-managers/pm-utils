@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 
-"""Combines Exemplar merge report with new 90X metrics report
-(from R&D group) and generates an Excel workbook with two sheets."""
+"""
+Combines Exemplar merge report with new 90X metrics report
+(from R&D group) and generates an Excel workbook with two sheets.
+
+tab3: weekly report tab3 'Production Metrics'
+tmqc: QC data metrics with results PASS or FAIL
+"""
 
 import argparse
 import re
