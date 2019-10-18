@@ -159,9 +159,9 @@ def load_metrics(new_90x_metrics_file):
     nm = pd.read_excel(new_90x_metrics_file, sheet_name="_90x")
     d2 = {c: normalize_name(c) for c in nm.columns}
     nm.rename(columns=d2, inplace=True)
-    # convert 60x coverage
+    # convert pct to per_coverage_bases for 60x cov
     nm["per_sixty_coverage_bases"] = nm["pct_of_bases_with_60x_coverage"] * 100
-    # convert 70x coverage
+    # convert pct to per_coverage_bases for 70x cov
     nm["per_seventy_coverage_bases"] = (
         nm["pct_of_bases_with_70x_coverage"] * 100
     )
@@ -177,12 +177,12 @@ def merge_qc_results(rtm_sub, nm_sub):
     # Negative checks, should all be False
     n1 = m["unique_aligned_gb"] < 90.0
     n2 = m["aligned_bases_pct"] < 90.0
-    n3 = m["average_coverage"] < 90.0  # 90x metrics
+    n3 = m["average_coverage"] < 90.0  # new 90x metrics cutoff
     n4 = m["per_ten_coverage_bases"] < 95.0
     n5 = m["per_twenty_coverage_bases"] < 90.0
-    n6 = m["per_sixty_coverage_bases"] < 95.0  # 90x metrics
-    n7 = m["per_seventy_coverage_bases"] < 90.0  # 90x metrics
-    n8 = m["q20_bases"] < 205_000_000_000  # 90x metrics
+    n6 = m["per_sixty_coverage_bases"] < 95.0  # new 90x metrics cutoff
+    n7 = m["per_seventy_coverage_bases"] < 90.0  # new 90x metrics cutoff
+    n8 = m["q20_bases"] < 205_000_000_000  # new 90x metrics cutoff
     # Positive checks, should all be True
     p1 = m["contamination_pct"] < 3.0
     p2 = m["chimeric_rate"] < 5.0
