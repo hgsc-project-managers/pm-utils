@@ -33,7 +33,8 @@ RTM_COLS = [
     "per_twenty_coverage_bases",
     "q20_bases",
     "contamination_rate",
-    "mean_insert_size",
+    # new tm metrics
+    "mean_insert_size",  # corrected column name & value in Exemplar
     "pf_hq_aligned_q20_bases",
     "wgs_het_snp_q",
     "wgs_het_snp_sensitivity",
@@ -42,6 +43,7 @@ RTM_COLS = [
 NM_COLS = [
     "sample_id",
     "samples",
+    # new 90x metrics
     "per_sixty_coverage_bases",
     "per_seventy_coverage_bases",
 ]
