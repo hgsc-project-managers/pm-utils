@@ -172,11 +172,14 @@ def load_merge_report(recent_merge_report):
 
 
 def load_metrics(new_90x_metrics_file):
-    # new metrics from R&D group
-    # will not be pushed to Exemplar LIMS
+    # new metrics from R&D group; will not be pushed to Exemplar LIMS
     nm = pd.read_excel(new_90x_metrics_file, sheet_name="_90x")
     d2 = {c: normalize_name(c) for c in nm.columns}
     nm.rename(columns=d2, inplace=True)
+    # convert 60x coverage
+    nm["per_sixty_coverage_bases"] = nm["pct_of_bases_with_60x_coverage"] * 100
+    # convert 70x coverage
+    nm["per_seventy_coverage_bases"] = nm["pct_of_bases_with_70x_coverage"] * 100
     nm_sub = nm.loc[:, NM_COLS]
     return nm_sub
 
