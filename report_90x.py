@@ -165,7 +165,9 @@ def load_metrics(new_90x_metrics_file):
     # convert 60x coverage
     nm["per_sixty_coverage_bases"] = nm["pct_of_bases_with_60x_coverage"] * 100
     # convert 70x coverage
-    nm["per_seventy_coverage_bases"] = nm["pct_of_bases_with_70x_coverage"] * 100
+    nm["per_seventy_coverage_bases"] = (
+        nm["pct_of_bases_with_70x_coverage"] * 100
+    )
     nm_sub = nm.loc[:, NM_COLS]
     return nm_sub
 
