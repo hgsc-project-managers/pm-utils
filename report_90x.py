@@ -36,8 +36,8 @@ RTM_COLS = [
 NM_COLS = [
     "sample_id",
     "samples",
-    "pct_of_bases_with_60x_coverage",
-    "pct_of_bases_with_70x_coverage",
+    "per_sixty_coverage_bases",
+    "per_seventy_coverage_bases",
 ]
 
 # for output files
@@ -66,8 +66,8 @@ TMQC_COLS = [
     "wgs_het_snp_sensitivity",
     "per_ten_coverage_bases",
     "per_twenty_coverage_bases",
-    "pct_of_bases_with_60x_coverage",
-    "pct_of_bases_with_70x_coverage",
+    "per_sixty_coverage_bases",
+    "per_seventy_coverage_bases",
     "q20_bases",
     "contamination_pct",
     # internal qc only
