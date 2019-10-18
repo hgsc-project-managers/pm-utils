@@ -8,13 +8,15 @@ tab3: weekly report tab3 'Production Metrics'
 tmqc: QC data metrics with results PASS or FAIL
 """
 
+# First come standard libraries, in alphabetical order.
 import argparse
+from collections import defaultdict
 import re
 
-from collections import defaultdict
-
+# After a blank line, import third-party libraries.
 import pandas as pd
 
+# After another blank line, import local libraries.
 from report_merged_qc_results import normalize_name
 
 
