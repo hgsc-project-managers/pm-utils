@@ -26,7 +26,6 @@ RTM_COLS = [
     "merge_finished_date",
     "results_path",
     "unique_aligned_bases",  # internal qc only
-    "duplicate_bases",  # internal qc only
     "aligned_bases_pct",  # internal qc only
     "average_coverage",
     "chimeric_rate",  # internal qc only
