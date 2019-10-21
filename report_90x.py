@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Combines Exemplar merge report with new 90X metrics report
+Combines Exemplar merge report with new 90X coverage metrics file
 (from R&D group) and generates an Excel workbook with two sheets.
 
 tab3: weekly report tab3 'Production Metrics'
@@ -165,6 +165,7 @@ def load_metrics(new_90x_cov_metrics_file):
     nm["per_seventy_coverage_bases"] = (
         nm["pct_of_bases_with_70x_coverage"] * 100
     )
+    # use loc to avoid SettingWithCopyWarning warning message
     nm_sub = nm.loc[:, NM_COLS]
     return nm_sub
 
