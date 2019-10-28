@@ -97,6 +97,7 @@ RPT_COLS = [
 # map abbrev (from merge_name in input report) to the Study/Cohort name
 COLLECTION_LIST = [
     ("Legacy", "TOPMed Control"),
+    ("TMCONT", "TOPMed Control"),
     ("TMHASC", "Harvard SCD"),
     ("TMCGVC", "Causal Genetic Variants of Cardiomyopathy"),
     ("TMGCUC", "Genetic Causes of Unexplained Cardiomyopathies"),
