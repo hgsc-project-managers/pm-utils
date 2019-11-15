@@ -132,6 +132,7 @@ SE_NOTE_COLS = [
 
 # Construct Columns
 
+rpt_se_cols = SE_ONLY_COLS + INTERSECT_COLS + NM_COLS
 tmqc_se_cols = WKT3_COLS + INTERNAL_QC_COLS + SE_NOTE_COLS
 
 tmqc_90x_cols = WKT3_COLS[:]  # make a new copy
