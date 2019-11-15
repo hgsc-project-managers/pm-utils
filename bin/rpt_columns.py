@@ -44,7 +44,8 @@ SE_ONLY_COLS = [
     "sample_internal_id",  # rename to sample_id
     "unique_aligned",  # calculate unique_aligned_gb
     # dates
-    "flowcell_create_date" "run_start_date",
+    "flowcell_create_date",
+    "run_start_date",
     "run_finished_date",
     "analysis_start_date",
     "bwa_analysis_finished_date",
