@@ -2,7 +2,7 @@
 Collection of column lists to construct other columnns.
 
 Preserved columm order should look like this
-TMQC_90X_COLS = (
+tmqc_90x_cols = (
     [
         # report tab3 'Production Metrics'
         "sample_id",
@@ -39,6 +39,7 @@ SE_ONLY_COLS = [
     "flowcell_id",
     "lane_num",
     "index_id",
+    "work_order_id",  # extract abbrev
     "collaborator_sample_id",
     "sample_internal_id",  # rename to sample_id
     "unique_aligned",  # calculate unique_aligned_gb
