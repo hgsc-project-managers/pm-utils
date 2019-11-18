@@ -79,7 +79,13 @@ def load_exemplar_ib_report(recent_exemplar_ib_report):
     d3.update(COLLECTION_LIST)
     rtm_sub["collection"] = cid.map(d3)
     # create lane_barcode
-    rtm_sub["lane_barcode"] = rtm_sub["flowcell_id"] + "-" + rtm_sub["lane_num"].astype(str)+ "-" + rtm_sub["index_id"]
+    rtm_sub["lane_barcode"] = (
+        rtm_sub["flowcell_id"]
+        + "-"
+        + rtm_sub["lane_num"].astype(str)
+        + "-"
+        + rtm_sub["index_id"]
+    )
     # convert contamination_rate to contamination_pct
     rtm_sub["contamination_pct"] = rtm_sub["contamination_rate"] * 100
     # pandas broadcasting operation
