@@ -12,7 +12,6 @@ tmqc: QC data metrics with results PASS or FAIL
 import argparse
 from collections import defaultdict
 import re
-from sys import exit
 
 # After a blank line, import third-party libraries
 import pandas as pd
