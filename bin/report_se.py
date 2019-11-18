@@ -60,7 +60,7 @@ def run(recent_exemplar_ib_report, output_file):
 
 
 def load_exemplar_ib_report(recent_exemplar_ib_report):
-    rtm = pd.read_excel(recent_exemplar_ib_report, sheet_name="table ref")
+    rtm = pd.read_excel(recent_exemplar_ib_report, sheet_name="ib_report")
     # fillna for missing values
     rtm.fillna(method="ffill")
     # normalize column names
