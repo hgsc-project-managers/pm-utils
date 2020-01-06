@@ -35,13 +35,13 @@ COLLECTION_LIST = [
 
 def main():
     args = parse_args()
-    run(args.recent_merge_report, args.output_file)
+    run(args.recent_ib_report, args.output_file)
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "recent_merge_report",
+        "recent_ib_report",
         help="*.xlsx, usually generated from Exemplar LIMS",
     )
     parser.add_argument("output_file", help="should end with .xlsx")
