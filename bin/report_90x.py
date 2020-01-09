@@ -8,86 +8,21 @@ tab3: weekly report tab3 'Production Metrics'
 tmqc: QC data metrics with results PASS or FAIL
 """
 
-# First come standard libraries, in alphabetical order.
+# First come standard libraries, in alphabetical order
 import argparse
 from collections import defaultdict
 import re
 
-# After a blank line, import third-party libraries.
+# After a blank line, import third-party libraries
 import pandas as pd
 
-# After another blank line, import local libraries.
-from report_merged_qc_results import normalize_name
+# After another blank line, import local libraries
+from utils import normalize_name
+from rpt_columns import (
+    rpt_merge_cols, nm_90x_cols,  # input
+    WKT3_COLS, tmqc_90x_cols,  # output
+)
 
-
-# for input files
-RTM_COLS = [
-    "merge_name",
-    "merge_finished_date",
-    "results_path",
-    "unique_aligned_bases",  # internal qc only
-    "aligned_bases_pct",  # internal qc only
-    "average_coverage",
-    "chimeric_rate",  # internal qc only
-    "per_ten_coverage_bases",
-    "per_twenty_coverage_bases",
-    "q20_bases",
-    "contamination_rate",
-    # new tm metrics
-    "mean_insert_size",  # corrected column name & value in Exemplar LIMS
-    "pf_hq_aligned_q20_bases",
-    "wgs_het_snp_q",
-    "wgs_het_snp_sensitivity",
-]
-
-NM_COLS = [
-    "sample_id",
-    "samples",
-    # new 90x coverage metrics
-    "per_sixty_coverage_bases",
-    "per_seventy_coverage_bases",
-]
-
-# for output files
-WKT3_COLS = [
-    "sample_id",
-    "collection",
-    "pf_hq_aligned_q20_bases",
-    "mean_insert_size",
-    "average_coverage",
-    "wgs_het_snp_q",
-    "wgs_het_snp_sensitivity",
-    "per_ten_coverage_bases",
-    "per_twenty_coverage_bases",
-    "q20_bases",
-    "contamination_pct",
-]
-
-TMQC_COLS = [
-    # weekly_report
-    "sample_id",
-    "collection",
-    "pf_hq_aligned_q20_bases",
-    "mean_insert_size",
-    "average_coverage",
-    "wgs_het_snp_q",
-    "wgs_het_snp_sensitivity",
-    "per_ten_coverage_bases",
-    "per_twenty_coverage_bases",
-    "per_sixty_coverage_bases",
-    "per_seventy_coverage_bases",
-    "q20_bases",
-    "contamination_pct",
-    # internal qc only
-    "unique_aligned_gb",
-    "aligned_bases_pct",
-    "chimeric_rate",
-    # jw_note
-    "merge_name",
-    "merge_finished_date",
-    "results_path",
-    "results",
-]
 
 # TODO add abbrev for newly assigned study Walk-PHaSST SCD & PCGC
 # map abbrev (from merge_name in input report) to the Study/Cohort name
