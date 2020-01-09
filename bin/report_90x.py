@@ -61,7 +61,7 @@ def run(recent_merge_report, new_90x_cov_metrics_file, output_file):
     # TODO track weeks
     # will contain output for at least the last 4 weeks along with metrics
     wkt3 = m[WKT3_COLS]
-    tmqc = m[TMQC_COLS]
+    tmqc = m[tmqc_90x_cols]
     output_results(output_file, wkt3, tmqc)
 
 
@@ -71,7 +71,7 @@ def load_merge_report(recent_merge_report):
     d1 = {c: normalize_name(c) for c in rtm.columns}
     rtm.rename(columns=d1, inplace=True)
     # use loc to avoid SettingWithCopyWarning warning message
-    rtm_sub = rtm.loc[:, RTM_COLS]
+    rtm_sub = rtm.loc[:, rpt_merge_cols]
     # extract abbrev from merge_name
     cid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[2]
     # add a column 'collection'
@@ -102,7 +102,7 @@ def load_metrics(new_90x_cov_metrics_file):
         nm["pct_of_bases_with_70x_coverage"] * 100
     )
     # use loc to avoid SettingWithCopyWarning warning message
-    nm_sub = nm.loc[:, NM_COLS]
+    nm_sub = nm.loc[:, nm_90x_cols]
     return nm_sub
 
 
