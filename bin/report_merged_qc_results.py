@@ -65,8 +65,8 @@ def run(recent_merge_report, output_file):
     rtm_sub = load_merge_report(recent_merge_report)
     # TODO track weeks
     # will contain output for at least the last 4 weeks along with metrics
-    rpt = rtm_sub[RPT_COLS]
-    tmqc = rtm_sub[TM_COLS]
+    rpt = rtm_sub[WKT3_COLS]
+    tmqc = rtm_sub[tmqc_merge_cols]
     output_results(output_file, rpt, tmqc)
 
 
@@ -78,7 +78,7 @@ def load_merge_report(recent_merge_report):
     rtm.rename(columns=d1, inplace=True)
 
     # use loc to avoid warning message
-    rtm_sub = rtm.loc[:, SUB_COLS]
+    rtm_sub = rtm.loc[:, rpt_merge_cols]
 
     # extract abbrev from merge_name
     cid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[2]
