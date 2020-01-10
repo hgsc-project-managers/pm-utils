@@ -1,33 +1,17 @@
 #!/usr/bin/env python
 
 """
+Inputs a single input file 'Exemplar Merge Report'
+and generates an XLSX workbook with two sheets.
+
+tab3: weekly report tab3 'Production Metrics'
+tm_qc: QC data metrics with results PASS or FAIL
+
 New TOPMed metrics be added to Exemplar LIMS merge report:
 - PF_HQ_Aligned_Q20_Bases
 - MEAN_INSERT_SIZE  # corrected value for Mean Insert Size (Library AVG)
 - WGS_HET_SNP_Q
 - WGS_HET_SNP_SENSITIVITY
-
-Update code that uses a single input file (example in below) and
-generates an XLSX workbook with two sheets:
-- tab3 for TOPMed Weekly Report, 'Production Metrics' (tab3)
-- tm_qc for TOPMed sample QC
-
-e.g.
-- merge_report_with_new_topmed_metrics.xlsx
-
-Columns in TOPMed Weekly Report tab3 'Production Metrics':
-1 External ID  # extract from merge_name
-2 Collection  # Study/Cohort
-3 PF HQ Aligned Q20 Bases # new
-4 Mean Insert Size (Library AVG)  # new
-5 Mean Coverage (Raw)  # new correct value
-6 WGS HET SNP Q  # new
-7 WGS HET SNP SENSITIVITY  # new
-8 Per 10 Coverage Bases
-9 Per 20 Coverage Bases
-10 Q20 Bases
-11 Contamination %  # convert Contamination Rate to Contamination %
-12 Notes
 """
 
 import argparse
