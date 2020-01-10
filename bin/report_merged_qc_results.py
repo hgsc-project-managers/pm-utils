@@ -14,12 +14,16 @@ New TOPMed metrics be added to Exemplar LIMS merge report:
 - WGS_HET_SNP_SENSITIVITY
 """
 
+# First come standard libraries, in alphabetical order
 import argparse
+from collections import defaultdict
 import re
 
-from collections import defaultdict
-
+# After a blank line, import third-party libraries
 import pandas as pd
+
+# After another blank line, import local libraries
+from utils import normalize_name
 
 
 SUB_COLS = [
@@ -169,27 +173,6 @@ def output_results(output_file, rpt, tmqc):
     with pd.ExcelWriter(output_file) as writer:
         rpt.to_excel(writer, sheet_name="tab3", index=False)
         tmqc.to_excel(writer, sheet_name="tm_qc", index=False)
-
-
-def normalize_name(field_name):
-    """lowercase with underscores, etc"""
-    fixes = (
-        (r"/", "_per_"),
-        (r"%", "_pct_"),
-        (r"\W", "_"),
-        (r"^_+", ""),  # remove '_' if field_name begins with '_'
-        (r"_+$", ""),
-        (r"__+", "_"),
-    )
-    result = field_name.strip().lower() or None
-    # result = field_name.strip().upper() or None
-    if result:
-        if result.endswith("?"):
-            if not re.match(r"is[_\W]", result):
-                result = "is_" + result
-        for pattern, replacement in fixes:
-            result = re.sub(pattern, replacement, result)
-    return result
 
 
 if __name__ == "__main__":
