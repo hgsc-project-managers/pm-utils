@@ -87,35 +87,35 @@ def load_merge_report(recent_merge_report):
     d2.update(COLLECTION_LIST)
     # add a column 'collection'
     rtm_sub["collection"] = cid.map(d2)
-
     # extract sample_id from merge_name
     sid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[3]
     rtm_sub["sample_id"] = sid
-
     # convert contamination_rate to contamination_pct
     rtm_sub["contamination_pct"] = rtm_sub["contamination_rate"] * 100
-
     # pandas broadcasting operation
     rtm_sub["unique_aligned_gb"] = (
         rtm_sub["unique_aligned_bases"]
     ) / 1_000_000_000
+    return rtm_sub
 
+
+def qc_results(rtm_sub):
+    qc = rtm_sub.loc[:].copy()  # create copy of rtm_sub
     # add qc results 'PASS' or 'FAIL'
     # Negative checks, should all be False
-    n1 = rtm_sub["unique_aligned_gb"] < 90.0
-    n2 = rtm_sub["aligned_bases_pct"] < 90.0
-    n3 = rtm_sub["average_coverage"] < 30.0
-    n4 = rtm_sub["per_ten_coverage_bases"] < 95.0
-    n5 = rtm_sub["per_twenty_coverage_bases"] < 90.0
-    n6 = rtm_sub["q20_bases"] < 87_000_000_000
+    n1 = qc["unique_aligned_gb"] < 90.0
+    n2 = qc["aligned_bases_pct"] < 90.0
+    n3 = qc["average_coverage"] < 30.0
+    n4 = qc["per_ten_coverage_bases"] < 95.0
+    n5 = qc["per_twenty_coverage_bases"] < 90.0
+    n6 = qc["q20_bases"] < 87_000_000_000
     # Positive checks, should all be True
-    p1 = rtm_sub["contamination_pct"] < 3.0
-    p2 = rtm_sub["chimeric_rate"] < 5.0
+    p1 = qc["contamination_pct"] < 3.0
+    p2 = qc["chimeric_rate"] < 5.0
     # Combined
     all_checks_good = p1 & p2 & ~(n1 | n2 | n3 | n4 | n5 | n6)
-    rtm_sub["results"] = all_checks_good.map({True: "PASS", False: "FAIL"})
-
-    return rtm_sub
+    qc["results"] = all_checks_good.map({True: "PASS", False: "FAIL"})
+    return qc
 
 
 def output_results(output_file, rpt, tmqc):
