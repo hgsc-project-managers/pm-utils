@@ -25,9 +25,9 @@ import pandas as pd
 # After another blank line, import local libraries
 from utils import normalize_name
 from rpt_columns import (
-        rpt_merge_cols,  # input
-        WKT3_COLS,
-        tmqc_merge_cols,  # output
+    rpt_merge_cols,  # input
+    WKT3_COLS,
+    tmqc_merge_cols,  # output
 )
 
 
@@ -50,7 +50,7 @@ def main():
 def parse_args():
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "recent_merge_report",
