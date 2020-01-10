@@ -141,8 +141,12 @@ SE_NOTE_COLS = [
 rpt_se_cols = SE_ONLY_COLS + INTERSECT_COLS + NM_COLS
 tmqc_se_cols = WKT3_COLS + INTERNAL_QC_COLS + SE_NOTE_COLS  # preserve order
 
-# input for report_90x
+# input for report_merged_qc_results, report_90x
 rpt_merge_cols = MERGE_ONLY_COLS + INTERSECT_COLS + NM_COLS
+
+# output for report_merged_qc_results
+tmqc_merge_cols = WKT3_COLS + INTERNAL_QC_COLS + MERGE_NOTE_COLS
+
 # output for report_90x
 tmqc_90x_cols = WKT3_COLS[:]  # make a new copy
 tmqc_90x_cols[-3:-3] = NM_60X_70X_COV_COLS
