@@ -71,7 +71,7 @@ def run(recent_merge_report, output_file):
 
 
 def load_merge_report(recent_merge_report):
-    rtm = pd.read_excel(recent_merge_report, sheet_name="table ref")
+    rtm = pd.read_excel(recent_merge_report, sheet_name="merge_report")
 
     # normalize column names
     d1 = {c: normalize_name(c) for c in rtm.columns}
