@@ -24,63 +24,12 @@ import pandas as pd
 
 # After another blank line, import local libraries
 from utils import normalize_name
+from rpt_columns import (
+        rpt_merge_cols,  # input
+        WKT3_COLS,
+        tmqc_merge_cols,  # output
+)
 
-
-SUB_COLS = [
-    "merge_name",
-    "merge_finished_date",
-    "results_path",
-    "unique_aligned_bases",  # qc only
-    "aligned_bases_pct",  # qc only
-    "average_coverage",
-    "chimeric_rate",  # qc only
-    "per_ten_coverage_bases",
-    "per_twenty_coverage_bases",
-    "q20_bases",
-    "contamination_rate",
-    # new metrics
-    "wgs_het_snp_q",
-    "mean_insert_size",
-    "wgs_het_snp_sensitivity",
-    "pf_hq_aligned_q20_bases",
-]
-
-TM_COLS = [
-    # weekly_report
-    "sample_id",
-    "collection",
-    "pf_hq_aligned_q20_bases",
-    "mean_insert_size",
-    "average_coverage",
-    "wgs_het_snp_q",
-    "wgs_het_snp_sensitivity",
-    "per_ten_coverage_bases",
-    "per_twenty_coverage_bases",
-    "q20_bases",
-    "contamination_pct",
-    # qc only
-    "unique_aligned_gb",
-    "aligned_bases_pct",
-    "chimeric_rate",
-    "merge_name",
-    "merge_finished_date",
-    "results_path",
-    "results",
-]
-
-RPT_COLS = [
-    "sample_id",
-    "collection",
-    "pf_hq_aligned_q20_bases",
-    "mean_insert_size",
-    "average_coverage",
-    "wgs_het_snp_q",
-    "wgs_het_snp_sensitivity",
-    "per_ten_coverage_bases",
-    "per_twenty_coverage_bases",
-    "q20_bases",
-    "contamination_pct",
-]
 
 # map abbrev (from merge_name in input report) to the Study/Cohort name
 COLLECTION_LIST = [
