@@ -5,7 +5,7 @@ Inputs Exemplar Illumina Breakdown report
 and generates an Excel workbook with two sheets.
 
 tab3: weekly report tab3 'Production Metrics'
-tmqc: QC data metrics with results PASS or FAIL
+tm_qc: QC data metrics with results PASS or FAIL
 """
 
 # First come standard libraries, in alphabetical order
