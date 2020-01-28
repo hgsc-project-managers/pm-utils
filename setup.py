@@ -18,6 +18,8 @@ with open(path.join(HERE, "README.md"), encoding="utf-8") as f:
 
 REQUIREMENTS = [
     "pandas",
+    "xlrd",
+    "openpyxl",
 ]
 
 # TODO
