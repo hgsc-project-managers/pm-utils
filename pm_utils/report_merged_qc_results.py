@@ -57,7 +57,7 @@ def parse_args():
         "recent_merge_report",
         help="*.xlsx, input_file, usually downloaded from Exemplar LIMS",
     )
-    parser.add_argunent("--version", action="version",
+    parser.add_argument("--version", action="version",
                         version="%(prog)s {}".format(__version__))
     parser.add_argument("output_file", help="should end with .xlsx")
     args = parser.parse_args()
