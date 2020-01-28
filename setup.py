@@ -6,15 +6,7 @@ from os import path
 from setuptools import setup, find_packages
 
 HERE = path.abspath(path.dirname(__file__))
-NAME = "pm-utils"
-
-# Load the utils
-with open(path.join(HERE, NAME, "utils.py")) as f:
-    UTILS = f.read()
-
-# Load the rpt_columns
-with open(path.join(HERE, NAME, "rpt_columns.py")) as f:
-    RPT_COLUMNS = f.read()
+NAME = "pm_utils"
 
 # Load the version
 with open(path.join(HERE, NAME, "version.py")) as version_file:
@@ -39,9 +31,7 @@ SETUP_REQUIREMENTS = [
 setup(
     name=NAME,
     version=__version__,
-    description="Utilities for project managers"
-    utils=UTILS,
-    rpt_columns=RPT_COLUMNS,
+    description="Utilities for project managers",
     long_description=LONG_DESCRIPTION,
     long_description_type= "text/markdown",
     # applicable after transferring this repo to BCM-HGSC private
