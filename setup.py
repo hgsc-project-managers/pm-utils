@@ -52,10 +52,10 @@ setup(
     setup_requires=SETUP_REQUIREMENTS,
     entry_points={
         "console_scripts": [
-            "project_averages.py=pm-utils.project_averages:main",
-            "report_90x.py=pm-utils.report_90x:main",
-            "report_merged_qc_results.py=pm-utils.report_merged_qc_results:main",
-            "report_se.py=pm-utils.report_se:main",
+            "project_averages=pm_utils.project_averages:main",
+            "report_90x=pm_utils.report_90x:main",
+            "report_merged_qc_results=pm_utils.report_merged_qc_results:main",
+            "report_se=pm_utils.report_se:main",
         ],
     },
 )
