@@ -50,7 +50,6 @@ setup(
     ],
     packages=find_packages(exclude=["contrib", "docs", "tests"]),
     install_requires=REQUIREMENTS,
-    tests_requires=TEST_REQUIREMENTS,
     setup_requires=SETUP_REQUIREMENTS,
     entry_points={
         "console_scripts": [
