@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Inputs Exemplar Illumina Breakdown report
@@ -17,8 +17,9 @@ import re
 import pandas as pd
 
 # After another blank line, import local libraries
-from utils import normalize_name
-from rpt_columns import rpt_se_cols, WKT3_COLS, tmqc_se_cols
+from .utils import normalize_name
+from .rpt_columns import rpt_se_cols, WKT3_COLS, tmqc_se_cols
+from .version import __version__
 
 
 # TODO add abbrev for newly assigned study Walk-PHaSST SCD & PCGC
@@ -45,6 +46,8 @@ def parse_args():
         help="*.xlsx, usually generated from Exemplar LIMS",
     )
     parser.add_argument("output_file", help="should end with .xlsx")
+    parser.add_argument("--version", action="version",
+                        version="%(prog)s {}".format(__version__))
     args = parser.parse_args()
     return args
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 Inputs a single input file 'Exemplar Merge Report'
@@ -23,12 +23,13 @@ import re
 import pandas as pd
 
 # After another blank line, import local libraries
-from utils import normalize_name
-from rpt_columns import (
+from .utils import normalize_name
+from .rpt_columns import (
     rpt_merge_cols,  # input
     WKT3_COLS,
     tmqc_merge_cols,  # output
 )
+from .version import __version__
 
 
 # map abbrev (from merge_name in input report) to the Study/Cohort name
@@ -54,8 +55,10 @@ def parse_args():
     )
     parser.add_argument(
         "recent_merge_report",
-        help="*.xlsx, usually downloaded from Exemplar LIMS",
+        help="*.xlsx, input_file, usually downloaded from Exemplar LIMS",
     )
+    parser.add_argument("--version", action="version",
+                        version="%(prog)s {}".format(__version__))
     parser.add_argument("output_file", help="should end with .xlsx")
     args = parser.parse_args()
     return args

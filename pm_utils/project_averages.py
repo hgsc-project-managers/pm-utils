@@ -1,12 +1,18 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """Inputs Production Metrics (tab3) of BCM HGSC TOPMed Weekly Report
 and generates an Excel workbook with project average metrics by Collection"""
 
+# First come standard libraries, in alphabetical order
 import argparse
 import re
 
+# After a blank line, impport third-party libraries
 import pandas as pd
+
+# After another blank line, import third-party libraries
+from .version import __version__
+
 
 # display.precision sets the output display precision in terms of decimal places
 pd.set_option("precision", 4)
@@ -27,6 +33,8 @@ def parse_args():
         "output_file",
         help="*.xlsx, outputs Project Averages in tab4 for" " Weekly Report",
     )
+    parser.add_argument("--version", action="version",
+                        version="%(prog)s {}".format(__version__))
     args = parser.parse_args()
     return args
 
