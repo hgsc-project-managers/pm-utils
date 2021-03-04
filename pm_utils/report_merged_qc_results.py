@@ -29,18 +29,8 @@ from .rpt_columns import (
     WKT3_COLS,
     tmqc_merge_cols,  # output
 )
+from .mappings import STUDY_MAPPING
 from .version import __version__
-
-
-# map abbrev (from merge_name in input report) to the Study/Cohort name
-COLLECTION_LIST = [
-    ("Legacy", "TOPMed Control"),
-    ("TMCONT", "TOPMed Control"),
-    ("TMHASC", "Harvard SCD"),
-    ("TMCGVC", "Causal Genetic Variants of Cardiomyopathy"),
-    ("TMGCUC", "Genetic Causes of Unexplained Cardiomyopathies"),
-    ("TMREDS", "Sickle Cell Disease REDS III"),
-]
 
 
 def main():
@@ -85,7 +75,7 @@ def load_merge_report(recent_merge_report):
     cid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[2]
     # add default value using defaultdict
     d2 = defaultdict(lambda: None)
-    d2.update(COLLECTION_LIST)
+    d2.update(STUDY_MAPPING)
     # add a column 'collection'
     rtm_sub["collection"] = cid.map(d2)
     # extract sample_id from merge_name
