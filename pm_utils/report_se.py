@@ -19,19 +19,9 @@ import pandas as pd
 # After another blank line, import local libraries
 from .utils import normalize_name
 from .rpt_columns import rpt_se_cols, WKT3_COLS, tmqc_se_cols
+
+from .mappings import STUDY_MAPPING
 from .version import __version__
-
-
-# TODO add abbrev for newly assigned study Walk-PHaSST SCD & PCGC
-# map abbrev (from merge_name in input report) to the Study/Cohort name
-COLLECTION_LIST = [
-    ("Legacy", "TOPMed Control"),
-    ("TMCONT", "TOPMed Control"),
-    ("TMHASC", "Harvard SCD"),
-    ("TMCGVC", "Causal Genetic Variants of Cardiomyopathy"),
-    ("TMGCUC", "Genetic Causes of Unexplained Cardiomyopathies"),
-    ("TMREDS", "Sickle Cell Disease REDS III"),
-]
 
 
 def main():
@@ -78,7 +68,7 @@ def load_exemplar_ib_report(recent_exemplar_ib_report):
     cid = rtm_sub["work_order_id"].str.split("_", n=-1, expand=True)[0]
     # add a column collection
     d3 = defaultdict(lambda: None)
-    d3.update(COLLECTION_LIST)
+    d3.update(STUDY_MAPPING)
     rtm_sub["collection"] = cid.map(d3)
     # create lane_barcode
     rtm_sub["lane_barcode"] = (

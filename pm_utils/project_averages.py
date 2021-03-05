@@ -11,6 +11,7 @@ import re
 import pandas as pd
 
 # After another blank line, import third-party libraries
+from .utils import normalize_name
 from .version import __version__
 
 
@@ -59,27 +60,6 @@ def run(weekly_report, output_file):
     pm_gr_av = pm_gr[avg_cols]
     # write to excel with float_format
     pm_gr_av.to_excel(output_file, sheet_name="tab4", float_format="%.4f")
-
-
-def normalize_name(field_name):
-    """lowercase with underscores, etc"""
-    fixes = (
-        (r"/", "_per_"),
-        (r"%", "_pct_"),
-        (r"\W", "_"),
-        (r"^_+", ""),  # remove '_' if field_name begins with '_'
-        (r"_+$", ""),
-        (r"__+", "_"),
-    )
-    result = field_name.strip().lower() or None
-    # result = field_name.strip().upper() or None
-    if result:
-        if result.endswith("?"):
-            if not re.match(r"is[_\W]", result):
-                result = "is_" + result
-        for pattern, replacement in fixes:
-            result = re.sub(pattern, replacement, result)
-    return result
 
 
 if __name__ == "__main__":
