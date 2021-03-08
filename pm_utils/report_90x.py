@@ -75,14 +75,17 @@ def load_merge_report(recent_merge_report):
     # use loc to avoid SettingWithCopyWarning warning message
     rtm_sub = rtm.loc[:, rpt_merge_cols]
     # extract abbrev from merge_name
-    cid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[2]
+    decode  = rtm_sub["merge_name"].apply(decode_merge_name)
+    rtm_sub[["collection", "sample_id"]] = pd.DataFrame(
+    decode.tolist(), index=rtm_sub.index
+    )
+    cid = rtm_sub["collection"]
+    # sample_id from merge_name
+    sid = rtm_sub["sample_id"]
     # add a column 'collection'
     d2 = defaultdict(lambda: None)
     d2.update(STUDY_MAPPING)
     rtm_sub["collection"] = cid.map(d2)
-    # extract sample_id from merge_name
-    sid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[3]
-    rtm_sub["sample_id"] = sid
     # convert contamination_rate to contamination_pct
     rtm_sub["contamination_pct"] = rtm_sub["contamination_rate"] * 100
     # pandas broadcasting operation
