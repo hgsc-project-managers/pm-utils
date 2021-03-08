@@ -17,7 +17,10 @@ import re
 import pandas as pd
 
 # After another blank line, import local libraries
-from .utils import normalize_name
+from .utils import (
+    normalize_name,
+    decode_merge_name
+)
 from .rpt_columns import (
     rpt_merge_cols,
     nm_90x_cols,  # input
