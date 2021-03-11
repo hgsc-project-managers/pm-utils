@@ -80,8 +80,6 @@ def load_merge_report(recent_merge_report):
     decode.tolist(), index=rtm_sub.index
     )
     cid = rtm_sub["collection"]
-    # sample_id from merge_name
-    sid = rtm_sub["sample_id"]
     d2 = defaultdict(lambda: None)
     d2.update(STUDY_MAPPING)
     rtm_sub["collection"] = cid.map(d2)
