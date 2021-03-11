@@ -62,6 +62,9 @@ MERGE_PAT_STANDARD = re.compile(
     f"(?:{TIMESTAMP_PAT})_{LIB_PAT}-FLOWCELL(?:(?:-{FLOWCELL_PAT})+)$"
 )
 MERGE_PAT_SPECIAL = re.compile(f"({SAMPLE_PAT})-LIB((?:-{LIB_PAT})+)")
+MERGE_PAT_NEW = re.compile(
+    fr"({PROJECT_PAT})\.({SAMPLE_PAT})-\d_\dAMP-FLOWCELL(?:(?:-{FLOWCELL_PAT})+)$"
+)
 
 
 def standard_merge_rule(merge_name: str) -> tuple:
@@ -97,7 +100,15 @@ def special_merge_rule(merge_name: str) -> tuple:
     return projects.pop(), samples.pop()
 
 
-RULES = [standard_merge_rule, special_merge_rule]
+def new_merge_rule(merge_name: str) -> tuple:
+    m = MERGE_PAT_NEW.match(merge_name)
+    if not m:
+        return None, None
+    project, sample = m.groups()
+    return project, sample
+
+
+RULES = [standard_merge_rule, special_merge_rule, new_merge_rule]
 
 
 def decode_merge_name(merge_name: str) -> tuple:
