@@ -23,7 +23,10 @@ import re
 import pandas as pd
 
 # After another blank line, import local libraries
-from .utils import normalize_name
+from .utils import (
+    normalize_name,
+    decode_merge_name,
+)
 from .rpt_columns import (
     rpt_merge_cols,  # input
     WKT3_COLS,
@@ -69,18 +72,19 @@ def load_merge_report(recent_merge_report):
     # normalize column names
     d1 = {c: normalize_name(c) for c in rtm.columns}
     rtm.rename(columns=d1, inplace=True)
-    # use loc to avoid warning message
+    # use loc to avoid SettingWithCopyWarning message
     rtm_sub = rtm.loc[:, rpt_merge_cols]
-    # extract abbrev from merge_name
-    cid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[2]
+    # parse project abbrev & sample_id from merge_name
+    decode  = rtm_sub["merge_name"].apply(decode_merge_name)
+    rtm_sub[["collection", "sample_id"]] = pd.DataFrame(
+    decode.tolist(), index=rtm_sub.index
+    )
+    cid = rtm_sub["collection"]
     # add default value using defaultdict
     d2 = defaultdict(lambda: None)
     d2.update(STUDY_MAPPING)
     # add a column 'collection'
     rtm_sub["collection"] = cid.map(d2)
-    # extract sample_id from merge_name
-    sid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[3]
-    rtm_sub["sample_id"] = sid
     # convert contamination_rate to contamination_pct
     rtm_sub["contamination_pct"] = rtm_sub["contamination_rate"] * 100
     # pandas broadcasting operation
