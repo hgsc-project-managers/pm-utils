@@ -23,8 +23,8 @@ import re
 import pandas as pd
 
 # After another blank line, import local libraries
-from .utils import (
-    normalize_name,
+from .utils import normalize_name
+from .business import (
     decode_merge_name,
 )
 from .rpt_columns import (
