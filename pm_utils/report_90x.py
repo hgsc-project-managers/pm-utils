@@ -20,6 +20,7 @@ import pandas as pd
 from .utils import normalize_name
 from .business import (
     decode_merge_name,
+    load_merge_report,
 )
 from .rpt_columns import (
     rpt_merge_cols,
@@ -65,33 +66,6 @@ def run(recent_merge_report, new_90x_cov_metrics_file, output_file):
     wkt3 = m[WKT3_COLS]
     tmqc = m[tmqc_90x_cols]
     output_results(output_file, wkt3, tmqc)
-
-
-def load_merge_report(recent_merge_report):
-    rtm = pd.read_excel(recent_merge_report, sheet_name="merge_report")
-    # normalize column names
-    d1 = {c: normalize_name(c) for c in rtm.columns}
-    rtm.rename(columns=d1, inplace=True)
-    # use loc to avoid SettingWithCopyWarning message
-    rtm_sub = rtm.loc[:, rpt_merge_cols]
-    # parse project abbrev & sample_id from merge_name
-    decode  = rtm_sub["merge_name"].apply(decode_merge_name)
-    rtm_sub[["collection", "sample_id"]] = pd.DataFrame(
-    decode.tolist(), index=rtm_sub.index
-    )
-    cid = rtm_sub["collection"]
-    # add default value using defaultdict
-    d2 = defaultdict(lambda: None)
-    d2.update(STUDY_MAPPING)
-    # add a column 'collection'
-    rtm_sub["collection"] = cid.map(d2)
-    # convert contamination_rate to contamination_pct
-    rtm_sub["contamination_pct"] = rtm_sub["contamination_rate"] * 100
-    # pandas broadcasting operation
-    rtm_sub["unique_aligned_gb"] = (
-        rtm_sub["unique_aligned_bases"]
-    ) / 1_000_000_000
-    return rtm_sub
 
 
 def load_metrics(new_90x_cov_metrics_file):
