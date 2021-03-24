@@ -16,7 +16,7 @@ from .utils import normalize_name
 from .rpt_columns import rpt_merge_cols
 from .mappings import STUDY_MAPPING
 
-logger = logging.getLogger("utils in pm_utils")
+logger = logging.getLogger("business in pm_utils")
 
 
 def load_merge_report(recent_merge_report):
