@@ -60,7 +60,7 @@ def parse_args():
 
 def run(recent_merge_report, new_90x_cov_metrics_file, output_file):
     rtm_sub = load_merge_report(recent_merge_report)
-    nm_sub = load_metrics(new_90x_cov_metrics_file)
+    nm_sub = load_sixty_seventy_coverage_metrics(new_90x_cov_metrics_file)
     m = merge_qc_results(rtm_sub, nm_sub)
     # TODO track weeks
     # will contain output for at least the last 4 weeks along with metrics
@@ -69,7 +69,7 @@ def run(recent_merge_report, new_90x_cov_metrics_file, output_file):
     output_results(output_file, wkt3, tmqc)
 
 
-def load_metrics(new_90x_cov_metrics_file):
+def load_sixty_seventy_coverage_metrics(new_90x_cov_metrics_file):
     # new metrics from R&D group; will not be pushed to Exemplar LIMS
     nm = pd.read_excel(new_90x_cov_metrics_file, sheet_name="_90x")
     d2 = {c: normalize_name(c) for c in nm.columns}
