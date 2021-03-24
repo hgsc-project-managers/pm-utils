@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
 """
-Combines Exemplar merge report with new 90X coverage metrics file
-(from R&D group) and generates an Excel workbook with two sheets.
+Inputs Exemplar merge report and new 90X coverage metrics file
+for PCT_of_Bases with 60x coverage & PCT_of_Bases with 70x coverage.
+Outputs an Excel workbook with two sheets.
 
 tab3: weekly report tab3 'Production Metrics'
 tmqc: QC data metrics with results PASS or FAIL

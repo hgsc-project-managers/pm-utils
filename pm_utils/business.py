@@ -1,5 +1,5 @@
 """
-Add core modules that can be imported to other scripts
+Add modules that are shared in other scripts.
 """
 
 # First come standard libraries, in alphabetical order
