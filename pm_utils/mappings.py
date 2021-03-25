@@ -16,4 +16,3 @@ STUDY_MAPPING = [
     ("TMMLOF", "MLOF Hemophilia"),
     # TODO: update OMG SCD
 ]
-
