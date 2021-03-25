@@ -1,7 +1,6 @@
 """
-Inputs Exemplar merge report and new 90X coverage metrics file
-for PCT_of_Bases with 60x coverage & PCT_of_Bases with 70x coverage.
-Outputs an Excel workbook with two sheets.
+Inputs `Exemplar merge report `and `new 90X coverage metrics` files
+and generates an Excel workbook with two sheets.
 
 tab3: weekly report tab3 'Production Metrics'
 tmqc: QC data metrics with results PASS or FAIL
@@ -68,7 +67,21 @@ def run(recent_merge_report, new_90x_cov_metrics_file, output_file):
 
 
 def load_sixty_seventy_coverage_metrics(new_90x_cov_metrics_file):
-    # new metrics from R&D group; will not be pushed to Exemplar LIMS
+    """These are 90X coverage specific metrics that are not being pushed to
+    Exemplar LIMS but required for QC checks.
+    Getting the metrics file from NGIRD group.
+
+    PCT_of_Bases with 60x coverage
+    PCT_of_Bases with 70x coverage
+
+    Args:
+        new_90x_cov_metrics_file (XLSX file):
+            Strict Open XML Spreadsheet (.xlsx) format and must be saved as
+            Excel workbook (.xlsx)
+
+    Returns:
+        DataFrame: subset of DataFrame containing  90X coverage specfic fields
+    """
     nm = pd.read_excel(new_90x_cov_metrics_file, sheet_name="_90x")
     d2 = {c: normalize_name(c) for c in nm.columns}
     nm.rename(columns=d2, inplace=True)
