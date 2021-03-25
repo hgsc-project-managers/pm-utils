@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """Inputs Production Metrics (tab3) of BCM HGSC TOPMed Weekly Report
 and generates an Excel workbook with project average metrics by Collection"""
 

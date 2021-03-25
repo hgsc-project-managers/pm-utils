@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Inputs Exemplar merge report and new 90X coverage metrics file
 for PCT_of_Bases with 60x coverage & PCT_of_Bases with 70x coverage.

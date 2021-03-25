@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Inputs a single input file 'Exemplar Merge Report'
 and generates an XLSX workbook with two sheets.

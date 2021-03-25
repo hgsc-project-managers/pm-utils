@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Inputs Exemplar Illumina Breakdown report
 and generates an Excel workbook with two sheets.
