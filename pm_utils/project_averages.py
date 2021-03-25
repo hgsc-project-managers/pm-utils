@@ -58,7 +58,3 @@ def run(weekly_report, output_file):
     pm_gr_av = pm_gr[avg_cols]
     # write to excel with float_format
     pm_gr_av.to_excel(output_file, sheet_name="tab4", float_format="%.4f")
-
-
-if __name__ == "__main__":
-    main()
