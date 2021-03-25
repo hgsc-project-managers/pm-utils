@@ -1,6 +1,6 @@
 """
 Inputs a single input file 'Exemplar Merge Report'
-and generates an XLSX workbook with two sheets.
+and generates an Excel workbook with two sheets.
 
 tab3: weekly report tab3 'Production Metrics'
 tm_qc: QC data metrics with results PASS or FAIL
