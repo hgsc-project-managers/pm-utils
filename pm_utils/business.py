@@ -100,7 +100,6 @@ def new_merge_rule(merge_name: str) -> tuple:
     if not m:
         return None, None
     project, sample = m.groups()
-
     return project, sample
 
 
