@@ -4,15 +4,11 @@ Add common utility modules that can be imported to other scripts
 
 # First come standard libraries, in alphabetical order
 import csv
-import logging
 import re
 
 # After a blank line, import third-party libraries
 
 # After another blank line, import local libraries
-
-
-logger = logging.getLogger("utils in pm_utils")
 
 
 def normalize_name(field_name):
@@ -38,7 +34,6 @@ def normalize_name(field_name):
 
 class TsvDialect(csv.Dialect):
     """Standard Unix-style TSV format."""
-
     delimiter = "\t"
     doublequote = False
     escapechar = "\\"
