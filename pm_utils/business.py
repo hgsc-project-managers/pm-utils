@@ -47,7 +47,7 @@ def load_merge_report(recent_merge_report):
 
 
 TIMESTAMP_PAT = r"\d{4}-\d\d-\d\dT\d{4,6}"
-PROJECT_PAT = r"TM[A-Z]{4}"
+PROJECT_PAT = r"Legacy|TM[A-Z]{4}"
 SAMPLE_PAT = r"NWD\d{6}"
 SEQUENCE_PAT = r"\d{6}_\d"
 FLOWCELL_PAT = r"[A-Z0-9]{9}"
