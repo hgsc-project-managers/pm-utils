@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Add common utility modules that can be imported to other scripts
 """
@@ -36,7 +34,6 @@ def normalize_name(field_name):
 
 class TsvDialect(csv.Dialect):
     """Standard Unix-style TSV format."""
-
     delimiter = "\t"
     doublequote = False
     escapechar = "\\"

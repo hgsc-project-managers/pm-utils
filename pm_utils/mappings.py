@@ -14,6 +14,5 @@ STUDY_MAPPING = [
     ("TMPSCR", "PittSCR"),
     ("TMPCGC", "PCGC"),
     ("TMMLOF", "MLOF Hemophilia"),
-    # TODO: update OMG SCD
+    # TODO: add OMG SCD
 ]
-

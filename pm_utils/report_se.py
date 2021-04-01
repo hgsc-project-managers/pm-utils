@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Inputs Exemplar Illumina Breakdown report
 and generates an Excel workbook with two sheets.
@@ -107,7 +105,3 @@ def output_results(output_file, wkt3, tmqc):
     with pd.ExcelWriter(output_file) as writer:
         wkt3.to_excel(writer, sheet_name="tab3", index=False)
         tmqc.to_excel(writer, sheet_name="tm_qc", index=False)
-
-
-if __name__ == "__main__":
-    main()

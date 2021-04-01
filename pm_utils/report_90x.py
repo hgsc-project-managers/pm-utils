@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-
 """
-Combines Exemplar merge report with new 90X coverage metrics file
-(from R&D group) and generates an Excel workbook with two sheets.
+Inputs `Exemplar merge report `and `new 90X coverage metrics` files
+and generates an Excel workbook with two sheets.
 
 tab3: weekly report tab3 'Production Metrics'
 tmqc: QC data metrics with results PASS or FAIL
@@ -18,6 +16,10 @@ import pandas as pd
 
 # After another blank line, import local libraries
 from .utils import normalize_name
+from .business import (
+    decode_merge_name,
+    load_merge_report,
+)
 from .rpt_columns import (
     rpt_merge_cols,
     nm_90x_cols,  # input
@@ -55,7 +57,7 @@ def parse_args():
 
 def run(recent_merge_report, new_90x_cov_metrics_file, output_file):
     rtm_sub = load_merge_report(recent_merge_report)
-    nm_sub = load_metrics(new_90x_cov_metrics_file)
+    nm_sub = load_sixty_seventy_coverage_metrics(new_90x_cov_metrics_file)
     m = merge_qc_results(rtm_sub, nm_sub)
     # TODO track weeks
     # will contain output for at least the last 4 weeks along with metrics
@@ -64,33 +66,22 @@ def run(recent_merge_report, new_90x_cov_metrics_file, output_file):
     output_results(output_file, wkt3, tmqc)
 
 
-def load_merge_report(recent_merge_report):
-    rtm = pd.read_excel(recent_merge_report, sheet_name="merge_report")
-    # normalize column names
-    d1 = {c: normalize_name(c) for c in rtm.columns}
-    rtm.rename(columns=d1, inplace=True)
-    # use loc to avoid SettingWithCopyWarning warning message
-    rtm_sub = rtm.loc[:, rpt_merge_cols]
-    # extract abbrev from merge_name
-    cid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[2]
-    # add a column 'collection'
-    d2 = defaultdict(lambda: None)
-    d2.update(STUDY_MAPPING)
-    rtm_sub["collection"] = cid.map(d2)
-    # extract sample_id from merge_name
-    sid = rtm_sub["merge_name"].str.split("_", n=5, expand=True)[3]
-    rtm_sub["sample_id"] = sid
-    # convert contamination_rate to contamination_pct
-    rtm_sub["contamination_pct"] = rtm_sub["contamination_rate"] * 100
-    # pandas broadcasting operation
-    rtm_sub["unique_aligned_gb"] = (
-        rtm_sub["unique_aligned_bases"]
-    ) / 1_000_000_000
-    return rtm_sub
+def load_sixty_seventy_coverage_metrics(new_90x_cov_metrics_file):
+    """These are 90X coverage specific metrics that are not being pushed to
+    Exemplar LIMS but required for QC checks.
+    Getting the metrics file from NGIRD group.
 
+    PCT_of_Bases with 60x coverage
+    PCT_of_Bases with 70x coverage
 
-def load_metrics(new_90x_cov_metrics_file):
-    # new metrics from R&D group; will not be pushed to Exemplar LIMS
+    Args:
+        new_90x_cov_metrics_file (XLSX file):
+            Strict Open XML Spreadsheet (.xlsx) format and must be saved as
+            Excel workbook (.xlsx)
+
+    Returns:
+        DataFrame: subset of DataFrame containing  90X coverage specfic fields
+    """
     nm = pd.read_excel(new_90x_cov_metrics_file, sheet_name="_90x")
     d2 = {c: normalize_name(c) for c in nm.columns}
     nm.rename(columns=d2, inplace=True)
@@ -132,7 +123,3 @@ def output_results(output_file, wkt3, tmqc):
     with pd.ExcelWriter(output_file) as writer:
         wkt3.to_excel(writer, sheet_name="tab3", index=False)
         tmqc.to_excel(writer, sheet_name="tm_qc", index=False)
-
-
-if __name__ == "__main__":
-    main()
