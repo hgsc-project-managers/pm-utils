@@ -16,7 +16,7 @@ from .utils import normalize_name
 from .rpt_columns import rpt_merge_cols
 from .mappings import STUDY_MAPPING
 
-logger = logging.getLogger(__main__)
+logger = logging.getLogger(__name__)
 
 
 def load_merge_report(recent_merge_report):
